@@ -73,7 +73,7 @@
 
 <div class="container">
     <div style="background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: 0.3s;">
-        <h1 style="color: #4CAF50; text-align: center; font-family: Arial, sans-serif; margin: 0; font-size: 18px;">NFTFans Token Chat</h1>
+        <h1 style="color: #4CAF50; text-align: center; font-family: Arial, sans-serif; margin: 0; font-size: 12px;">NFTFans Token Chat</h1>
     </div>
 
     <textarea id="commentText" placeholder="Write your text here..."></textarea>
@@ -236,11 +236,11 @@ function displayComments(comments) {
 
         // Apply 2px red border if the comment contains #News
         if (comment.text.includes("#News")) {
-            commentNode.style.border = "2px solid red";
+            commentNode.style.border = "1px solid red";
         }
 		 // Apply 2px red border if the comment contains #News
         if (comment.text.includes("#Article")) {
-            commentNode.style.border = "2px solid Black";
+            commentNode.style.border = "1px solid Black";
         }
 
         // Generate random soft color background
