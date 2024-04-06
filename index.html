@@ -137,7 +137,7 @@
         });
     }
 	
-  function displayComments(comments) {
+ function displayComments(comments) {
     var commentsSection = document.getElementById("commentsSection");
     commentsSection.innerHTML = ""; // Clear existing comments
     
@@ -165,14 +165,20 @@
         var options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
         var dateString = timestamp.toLocaleDateString(undefined, options);
         
-        // Process comment text to make links clickable, style crypto addresses, and text after '@'
-        var processedCommentText = comment.text.replace(/(https?:\/\/[^\s]+)/g, function(url) {
-            return "<a href='" + url + "' target='_blank' style='font-size: 6px; color: red;'>" + url + "</a>";
-        }).replace(/0x[\da-fA-F]{40}/g, function(address) {
-            return "<span style='font-size: 7px; color: red;'>" + address + "</span>";
-        }).replace(/(@[^ ]+)/g, function(match) {
-            return "<span style='font-size: 14px; color: grey;'>" + match + "</span>";
-        });
+        // Process comment text to make links clickable, style crypto addresses, text after '@', and text after '#'
+        var processedCommentText = comment.text
+            .replace(/(https?:\/\/[^\s]+)/g, function(url) {
+                return "<a href='" + url + "' target='_blank' style='font-size: 6px; color: red;'>" + url + "</a>";
+            })
+            .replace(/0x[\da-fA-F]{40}/g, function(address) {
+                return "<span style='font-size: 7px; color: red;'>" + address + "</span>";
+            })
+            .replace(/(@[^ ]+)/g, function(match) {
+                return "<span style='font-size: 10px; color: grey;'>" + match + "</span>";
+            })
+            .replace(/(#[^\s]+)/g, function(match) {
+                return "<span style='font-size: 9px; color: red; cursor: pointer;' onclick='showCommentsWithHashtag(\"" + match + "\")'>" + match + "</span>";
+            });
         
         commentNode.innerHTML = "<p style='font-size: 6px;'><strong>Posted on:</strong> " + dateString + "</p>" +
                                 "<p><strong>Comment:</strong> " + processedCommentText + "</p>";
@@ -180,6 +186,19 @@
         commentsSection.appendChild(commentNode);
     });
 }
+
+function showCommentsWithHashtag(hashtag) {
+    var comments = document.getElementsByClassName("comment");
+    for (var i = 0; i < comments.length; i++) {
+        var commentText = comments[i].innerText || comments[i].textContent;
+        if (commentText.includes(hashtag)) {
+            comments[i].style.display = "block"; // Show comments containing the hashtag
+        } else {
+            comments[i].style.display = "none"; // Hide comments not containing the hashtag
+        }
+    }
+}
+
 
 
 
