@@ -11,7 +11,6 @@
         margin: 0;
         padding: 0;
         background-color: #f4f4f4;
-        font-size: 8px; /* Set font size to 8px */
     }
     .container {
         width: 80%;
@@ -24,20 +23,18 @@
     textarea {
         width: 100%;
         height: 100px;
-        padding: 5px; /* Reduced padding */
+        padding: 5px;
         border: 1px solid #ccc;
         border-radius: 5px;
         margin-bottom: 10px;
-        font-size: 8px; /* Set font size to 8px */
     }
     button {
-        padding: 5px 10px; /* Reduced padding */
+        padding: 5px 10px;
         background-color: #4caf50;
         color: #fff;
         border: none;
         border-radius: 5px;
         cursor: pointer;
-        font-size: 8px; /* Set font size to 8px */
     }
     button:hover {
         background-color: #45a049;
@@ -47,14 +44,11 @@
     }
     .comment {
         padding: 5px;
-        background-color: #f9f9f9;
         border-radius: 5px;
         margin-bottom: 10px;
-        font-size: 8px; /* Set font size to 8px */
     }
     .error {
         color: red;
-        font-size: 8px; /* Set font size to 8px */
     }
 </style>
 </head>
@@ -72,6 +66,13 @@
 </div>
 
 <script>
+    // Soft color palette
+    const softColors = ['#f2dede', '#faf2cc', '#d9edf7', '#dff0d8', '#fcf8e3', '#f4f4f4', '#f8d7da', '#cce5ff', '#d6e9c6', '#f5e3e3',
+                        '#f2e8d4', '#dbe5e5', '#eaf2f8', '#f4f2f2', '#fff2e6', '#eaeaea', '#e5f3f3', '#e8f8f5', '#edebf2', '#f7f8f9',
+                        '#f3f9f1', '#fcf8f2', '#fefefe', '#fcf2f2', '#fef3e2', '#f8f9fa', '#f2e6ff', '#e9e7ef', '#e2edf7', '#d6f5d6',
+                        '#f5d6f5', '#f6e2b3', '#d5e5d5', '#d9e3d3', '#fadbd8', '#f5f6cb', '#d6eaf8', '#f5e9f5', '#e6f1ff', '#f5e9f5',
+                        '#f5f5e5', '#fcf2f5', '#e1f5e1', '#f5e4e4', '#e5f5f5', '#f5e5f5', '#e3f3e3', '#f5e3e3', '#e8e8e8', '#e1f5f5'];
+
     // Configure AWS SDK
     AWS.config.update({
         region: 'eu-north-1',
@@ -131,37 +132,42 @@
             }
         });
     }
+	
+   function displayComments(comments) {
+    var commentsSection = document.getElementById("commentsSection");
+    commentsSection.innerHTML = ""; // Clear existing comments
     
-    function displayComments(comments) {
-        var commentsSection = document.getElementById("commentsSection");
-        commentsSection.innerHTML = ""; // Clear existing comments
+    // Sort comments by time (descending order)
+    comments.sort(function(a, b) {
+        return b.nftfan - a.nftfan;
+    });
+    
+    comments.forEach(function(comment) {
+        var commentNode = document.createElement("div");
+        commentNode.className = "comment";
         
-        // Sort comments by the time they were posted (assuming 'nftfan' attribute contains the timestamp)
-        comments.sort(function(a, b) {
-            return b.nftfan - a.nftfan; // Sort in descending order
-        });
+        // Generate random soft color background
+        var randomColor = softColors[Math.floor(Math.random() * softColors.length)];
+        commentNode.style.backgroundColor = randomColor;
         
-        comments.forEach(function(comment) {
-            var commentNode = document.createElement("div");
-            commentNode.className = "comment";
-            
-            // Parse the timestamp into a Date object
-            var timestamp = new Date(parseInt(comment.nftfan));
-            if (isNaN(timestamp.getTime())) {
-                console.error("Invalid timestamp:", comment.nftfan);
-                return;
-            }
-            
-            // Format the date and time strings
-            var options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
-            var dateString = timestamp.toLocaleDateString(undefined, options);
-            
-            commentNode.innerHTML = "<p><strong>Posted on:</strong> " + dateString + "</p>" +
-                                    "<p><strong>Comment:</strong> " + comment.text + "</p>";
-            
-            commentsSection.appendChild(commentNode);
-        });
-    }
+        // Parse the timestamp into a Date object
+        var timestamp = new Date(parseInt(comment.nftfan));
+        if (isNaN(timestamp.getTime())) {
+            console.error("Invalid timestamp:", comment.nftfan);
+            return;
+        }
+        
+        // Format the date and time strings
+        var options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+        var dateString = timestamp.toLocaleDateString(undefined, options);
+        
+        commentNode.innerHTML = "<p><strong>Posted on:</strong> " + dateString + "</p>" +
+                                "<p><strong>Comment:</strong> " + comment.text + "</p>";
+        
+        commentsSection.appendChild(commentNode);
+    });
+}
+
     
     function displayError(message) {
         var errorMessage = document.getElementById("errorMessage");
@@ -176,3 +182,4 @@
 
 </body>
 </html>
+
