@@ -160,6 +160,8 @@
         // Format the date and time strings
         var options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
         var dateString = timestamp.toLocaleDateString(undefined, options);
+	    // Set font size to 8px
+        var styleString = "font-size: 8px;";
         
         // Process comment text to make links clickable
         var processedCommentText = comment.text.replace(/(https?:\/\/[^\s]+)/g, function(url) {
