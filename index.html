@@ -78,8 +78,9 @@
 
     <textarea id="commentText" placeholder="Write your text here..."></textarea>
    <button style="background-color: #4caf50; color: white;" onclick="postComment()">Participate</button>
-<button style="background-color: #008CBA; color: white;" onclick="postArticleComment()">Post Article</button>
 <button style="background-color: #f44336; color: white;" onclick="postNewsComment()">Post News</button>
+<button style="background-color: #2196F3; color: white;" onclick="postArticleComment()">Post Article</button>
+
  <!-- Add a "News" button -->
     <div class="error" id="errorMessage"></div>
     
@@ -115,20 +116,6 @@
         postCommentToDynamoDB(commentText);
     }
 
-    function postArticleComment() {
-    var commentText = document.getElementById("commentText").value.trim(); // Trim whitespace from the input
-    
-    // Check if comment text exceeds the maximum or minimum word limit
-    var wordCount = commentText.split(/\s+/).length;
-    if (wordCount < 500 || wordCount > 1500) {
-        displayError("Please make sure your comment is between 500 and 1500 words.");
-        return;
-    }
-    
-    commentText += " #Article"; // Append #Article to the comment text
-    postCommentToDynamoDB(commentText);
-}
-
 function postNewsComment() {
     var commentText = document.getElementById("commentText").value.trim(); // Trim whitespace from the input
 
@@ -143,11 +130,41 @@ function postNewsComment() {
     postCommentToDynamoDB(commentText, true); // Pass true to indicate it's a news comment
 }
 
+function postArticleComment() {
+    var commentText = document.getElementById("commentText").value.trim(); // Trim whitespace from the input
 
-function postCommentToDynamoDB(commentText, isNews) {
-    // Check if comment text exceeds 750 words
+    // Check if comment text exceeds the word limit
     var wordCount = commentText.split(/\s+/).length;
-    if (wordCount > 500) {
+    if (wordCount < 501 || wordCount > 1501) {
+        displayError("Please make sure your article comment is between 501 and 1501 words.");
+        return;
+    }
+
+    // Append #Article to the comment text
+    commentText += " #Article";
+
+    // Call postCommentToDynamoDB with the fourth argument indicating it's an article comment
+    postCommentToDynamoDB(commentText, false, true, true);
+}
+
+function postCommentToDynamoDB(commentText, isNews, isArticle, isArticleComment) {
+    // Check if it's an article comment and set the border color accordingly
+    if (isArticleComment) {
+        document.getElementById("commentText").style.border = "2px solid black";
+    } else {
+        document.getElementById("commentText").style.border = isNews ? "2px solid red" : "1px solid";
+    }
+
+    // Your existing code for posting comment to DynamoDB...
+}
+
+
+
+
+
+function postCommentToDynamoDB(commentText, isNews, isArticle) {
+    // Check if it's not an article comment and the comment text exceeds 500 words
+    if (!isArticle && commentText.split(/\s+/).length > 500) {
         displayError("Please limit your comment to 500 words or less.");
         return;
     }
@@ -187,7 +204,6 @@ function postCommentToDynamoDB(commentText, isNews) {
     }
 }
 
-
     
     function loadComments() {
         var params = {
@@ -218,13 +234,13 @@ function displayComments(comments) {
         var commentNode = document.createElement("div");
         commentNode.className = "comment";
 
-        // Apply grey border if the comment contains #Article
-        if (comment.text.includes("#Article")) {
-            commentNode.style.border = "1px solid grey";
-        }
         // Apply 2px red border if the comment contains #News
         if (comment.text.includes("#News")) {
             commentNode.style.border = "2px solid red";
+        }
+		 // Apply 2px red border if the comment contains #News
+        if (comment.text.includes("#Article")) {
+            commentNode.style.border = "2px solid Black";
         }
 
         // Generate random soft color background
