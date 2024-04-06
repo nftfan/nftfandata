@@ -161,11 +161,13 @@
         var options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
         var dateString = timestamp.toLocaleDateString(undefined, options);
         
-        // Set font size to 8px
-        var styleString = "font-size: 7px;";
+        // Process comment text to make links clickable
+        var processedCommentText = comment.text.replace(/(https?:\/\/[^\s]+)/g, function(url) {
+            return "<a href='" + url + "' target='_blank'>" + url + "</a>";
+        });
         
-        commentNode.innerHTML = "<p style='" + styleString + "'><strong>Posted on:</strong> " + dateString + "</p>" +
-                                "<p style='" + styleString + "'><strong>Comment:</strong> " + comment.text + "</p>";
+        commentNode.innerHTML = "<p><strong>Posted on:</strong> " + dateString + "</p>" +
+                                "<p><strong>Comment:</strong> " + processedCommentText + "</p>";
         
         commentsSection.appendChild(commentNode);
     });
