@@ -42,6 +42,9 @@
         margin-bottom: 10px;
 		animation: rainbow-border 2s infinite; /* Adjusted animation duration to 2s */
     }
+    textarea.news-border {
+        border: 2px solid red; /* Apply 2px red border for the news feature */
+    }
     button {
         padding: 5px 10px;
         background-color: #4caf50;
@@ -70,12 +73,14 @@
 
 <div class="container">
     <div style="background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: 0.3s;">
-  <h1 style="color: #4CAF50; text-align: center; font-family: Arial, sans-serif; margin: 0; font-size: 18px;">NFTFans Token Chat</h1>
-</div>
-
+        <h1 style="color: #4CAF50; text-align: center; font-family: Arial, sans-serif; margin: 0; font-size: 18px;">NFTFans Token Chat</h1>
+    </div>
 
     <textarea id="commentText" placeholder="Write your text here..."></textarea>
-    <button onclick="postComment()">Participate</button>
+   <button style="background-color: #4caf50; color: white;" onclick="postComment()">Participate</button>
+<button style="background-color: #008CBA; color: white;" onclick="postArticleComment()">Post Article</button>
+<button style="background-color: #f44336; color: white;" onclick="postNewsComment()">Post News</button>
+ <!-- Add a "News" button -->
     <div class="error" id="errorMessage"></div>
     
     <div class="comments" id="commentsSection">
@@ -106,8 +111,40 @@
     };
     
     function postComment() {
+        var commentText = document.getElementById("commentText").value.trim(); // Trim whitespace from the input
+        postCommentToDynamoDB(commentText);
+    }
+
+    function postArticleComment() {
     var commentText = document.getElementById("commentText").value.trim(); // Trim whitespace from the input
     
+    // Check if comment text exceeds the maximum or minimum word limit
+    var wordCount = commentText.split(/\s+/).length;
+    if (wordCount < 850 || wordCount > 1500) {
+        displayError("Please make sure your comment is between 850 and 1500 words.");
+        return;
+    }
+    
+    commentText += " #Article"; // Append #Article to the comment text
+    postCommentToDynamoDB(commentText);
+}
+
+function postNewsComment() {
+    var commentText = document.getElementById("commentText").value.trim(); // Trim whitespace from the input
+
+    // Check if comment text exceeds the maximum or minimum word limit
+    var wordCount = commentText.split(/\s+/).length;
+    if (wordCount < 5 || wordCount > 30) {
+        displayError("Please make sure your news comment is between 5 and 30 words.");
+        return;
+    }
+    
+    commentText += " #News"; // Append #News to the comment text
+    postCommentToDynamoDB(commentText, true); // Pass true to indicate it's a news comment
+}
+
+
+function postCommentToDynamoDB(commentText, isNews) {
     // Check if comment text exceeds 750 words
     var wordCount = commentText.split(/\s+/).length;
     if (wordCount > 750) {
@@ -141,7 +178,15 @@
 
     // Clear the textarea after posting the comment
     document.getElementById("commentText").value = "";
+
+    // Add 2px red border for news comments
+    if (isNews) {
+        document.getElementById("commentText").style.border = "2px solid red";
+    } else {
+        document.getElementById("commentText").style.border = "1px solid";
+    }
 }
+
 
     
     function loadComments() {
@@ -159,34 +204,44 @@
             }
         });
     }
+
 function displayComments(comments) {
-    var commentsSection = document.getElementById("commentsSection");
-    commentsSection.innerHTML = ""; // Clear existing comments
-    
-    // Sort comments by time (descending order)
+    // Sort comments by timestamp in descending order (latest on top)
     comments.sort(function(a, b) {
         return b.nftfan - a.nftfan;
     });
-    
+
+    var commentsSection = document.getElementById("commentsSection");
+    commentsSection.innerHTML = ""; // Clear existing comments
+
     comments.forEach(function(comment) {
         var commentNode = document.createElement("div");
         commentNode.className = "comment";
-        
+
+        // Apply grey border if the comment contains #Article
+        if (comment.text.includes("#Article")) {
+            commentNode.style.border = "1px solid grey";
+        }
+        // Apply 2px red border if the comment contains #News
+        if (comment.text.includes("#News")) {
+            commentNode.style.border = "2px solid red";
+        }
+
         // Generate random soft color background
         var randomColor = softColors[Math.floor(Math.random() * softColors.length)];
         commentNode.style.backgroundColor = randomColor;
-        
+
         // Parse the timestamp into a Date object
         var timestamp = new Date(parseInt(comment.nftfan));
         if (isNaN(timestamp.getTime())) {
             console.error("Invalid timestamp:", comment.nftfan);
             return;
         }
-        
+
         // Format the date and time strings
         var options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
         var dateString = timestamp.toLocaleDateString(undefined, options);
-        
+
         // Process comment text to make links clickable, style crypto addresses, text after '@', '#' and '!'
         var processedCommentText = comment.text
             .replace(/(https?:\/\/[^\s]+)/g, function(url) {
@@ -210,30 +265,27 @@ function displayComments(comments) {
             .replace(/(0x[\da-fA-F]{40})/g, function(match) {
                 return "<span style='font-size: 9px; color: darkcyan; cursor: pointer;' onclick='showCommentsWithSymbol(\"" + match + "\")'>" + match + "</span>";
             });
-        
+
         commentNode.innerHTML = "<p style='font-size: 6px;'><strong>Posted on:</strong> " + dateString + "</p>" +
-                                "<p><strong>Comment:</strong> " + processedCommentText + "</p>";
-        
+            "<p><strong>Comment:</strong> " + processedCommentText + "</p>";
+
         commentsSection.appendChild(commentNode);
     });
 }
 
-function showCommentsWithSymbol(symbol) {
-    var comments = document.getElementsByClassName("comment");
-    for (var i = 0; i < comments.length; i++) {
-        var commentText = comments[i].innerText || comments[i].textContent;
-        if (commentText.includes(symbol)) {
-            comments[i].style.display = "block"; // Show comments containing the symbol
-        } else {
-            comments[i].style.display = "none"; // Hide comments not containing the symbol
+
+    function showCommentsWithSymbol(symbol) {
+        var comments = document.getElementsByClassName("comment");
+        for (var i = 0; i < comments.length; i++) {
+            var commentText = comments[i].innerText || comments[i].textContent;
+            if (commentText.includes(symbol)) {
+                comments[i].style.display = "block"; // Show comments containing the symbol
+            } else {
+                comments[i].style.display = "none"; // Hide comments not containing the symbol
+            }
         }
     }
-}
 
-
-
-
-    
     function displayError(message) {
         var errorMessage = document.getElementById("errorMessage");
         errorMessage.textContent = message;
