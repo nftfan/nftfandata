@@ -106,34 +106,43 @@
     };
     
     function postComment() {
-        var commentText = document.getElementById("commentText").value;
-        if(commentText.trim() === "") {
-            displayError("Please enter a comment!");
-            return;
-        }
-        
-        var params = {
-            TableName: tableName,
-            Item: {
-                nftfan: Date.now().toString(), // Primary key attribute
-                commentId: 'comment_' + Date.now().toString(), // Unique comment ID
-                text: commentText
-            }
-        };
-        
-        dynamodb.put(params, function(err, data) {
-            if (err) {
-                displayError("Error saving comment to DynamoDB: " + err.message);
-            } else {
-                clearError();
-                console.log("Successfully saved comment to DynamoDB", data);
-                loadComments(); // Reload comments after saving
-            }
-        });
-        
-        // Clear the textarea after posting the comment
-        document.getElementById("commentText").value = "";
+    var commentText = document.getElementById("commentText").value.trim(); // Trim whitespace from the input
+    
+    // Check if comment text exceeds 750 words
+    var wordCount = commentText.split(/\s+/).length;
+    if (wordCount > 750) {
+        displayError("Please limit your comment to 750 words or less.");
+        return;
     }
+
+    if (commentText === "") {
+        displayError("Please enter a comment!");
+        return;
+    }
+
+    var params = {
+        TableName: tableName,
+        Item: {
+            nftfan: Date.now().toString(), // Primary key attribute
+            commentId: 'comment_' + Date.now().toString(), // Unique comment ID
+            text: commentText
+        }
+    };
+
+    dynamodb.put(params, function (err, data) {
+        if (err) {
+            displayError("Error saving comment to DynamoDB: " + err.message);
+        } else {
+            clearError();
+            console.log("Successfully saved comment to DynamoDB", data);
+            loadComments(); // Reload comments after saving
+        }
+    });
+
+    // Clear the textarea after posting the comment
+    document.getElementById("commentText").value = "";
+}
+
     
     function loadComments() {
         var params = {
