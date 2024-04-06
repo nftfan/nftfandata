@@ -120,8 +120,8 @@
     
     // Check if comment text exceeds the maximum or minimum word limit
     var wordCount = commentText.split(/\s+/).length;
-    if (wordCount < 850 || wordCount > 1500) {
-        displayError("Please make sure your comment is between 850 and 1500 words.");
+    if (wordCount < 500 || wordCount > 1500) {
+        displayError("Please make sure your comment is between 500 and 1500 words.");
         return;
     }
     
@@ -147,8 +147,8 @@ function postNewsComment() {
 function postCommentToDynamoDB(commentText, isNews) {
     // Check if comment text exceeds 750 words
     var wordCount = commentText.split(/\s+/).length;
-    if (wordCount > 750) {
-        displayError("Please limit your comment to 750 words or less.");
+    if (wordCount > 500) {
+        displayError("Please limit your comment to 500 words or less.");
         return;
     }
 
