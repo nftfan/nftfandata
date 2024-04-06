@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Post Comments</title>
+<title>Post Articles</title>
 <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1002.0.min.js"></script>
 <style>
     body {
@@ -11,17 +11,8 @@
         margin: 0;
         padding: 0;
         background-color: #f4f4f4;
-    }
-	 @keyframes rainbow-border {
-        0% {
-            border-color: red;
-        }
-        50% {
-            border-color: yellow;
-        }
-        100% {
-            border-color: red;
-        }
+        color: #333; /* Set default text color */
+        transition: background-color 0.3s, color 0.3s; /* Add transition effect */
     }
     .container {
         width: 80%;
@@ -30,276 +21,315 @@
         background-color: #fff;
         border-radius: 5px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-		border: 0px solid;
-		
+        border: 0px solid;
     }
-    textarea {
+    .textarea-container {
+        position: relative;
+    }
+    textarea, input[type="text"] {
         width: 100%;
-        height: 100px;
         padding: 5px;
         border: 1px solid;
         border-radius: 5px;
         margin-bottom: 10px;
-		animation: rainbow-border 2s infinite; /* Adjusted animation duration to 2s */
+        background-color: #fff;
+        color: #333;
+        transition: background-color 0.3s, color 0.3s;
     }
-    textarea.news-border {
-        border: 2px solid red; /* Apply 2px red border for the news feature */
+    textarea.dark-mode, input[type="text"].dark-mode {
+        background-color: #333;
+        color: #fff;
     }
     button {
         padding: 5px 10px;
-        background-color: #4caf50;
+        background-color: #2196F3;
         color: #fff;
         border: none;
         border-radius: 5px;
         cursor: pointer;
     }
     button:hover {
-        background-color: #45a049;
+        background-color: #0b7dda;
     }
-    .comments {
-        margin-top: 20px;
+    .article {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 15px;
+        background-color: #fff;
+        color: #333;
+        transition: background-color 0.3s, color 0.3s;
     }
-    .comment {
+    .article.dark-mode {
+        background-color: #333;
+        color: #fff;
+    }
+    .title {
+        font-weight: bold;
+        background-color: #f0f0f0;
         padding: 5px;
         border-radius: 5px;
-        margin-bottom: 10px;
+        margin-bottom: 5px;
+        transition: background-color 0.3s;
+        position: relative; /* Add position relative */
+    }
+    .title.dark-mode {
+        background-color: #555;
+        color: #fff;
+    }
+    .datetime {
+        font-size: 6px;
+        color: grey;
+    }
+    .wallet {
+        font-size: 7px;
     }
     .error {
         color: red;
+    }
+    .toggle-container {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+    .toggle-btn {
+        width: 40px; /* Decrease width */
+        height: 20px; /* Decrease height */
+        border-radius: 10px; /* Adjust border radius */
+        background-color: #ddd;
+        position: relative;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .toggle-btn::after {
+        content: '';
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background-color: #fff;
+        top: 2px;
+        left: 2px;
+        transition: left 0.3s;
+    }
+    .dark-mode body {
+        background-color: #333; /* Change background color to dark */
+        color: #fff; /* Change text color to light */
+    }
+    .star-button {
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+        cursor: pointer;
+        background: none;
+        border: none;
+        font-size: 16px;
+        line-height: 1;
+    }
+    .star-count {
+        position: absolute;
+        top: 50%;
+        right: 30px;
+        transform: translateY(-50%);
+        font-size: 14px;
+        color: #888;
     }
 </style>
 </head>
 <body>
 
 <div class="container">
-    <div style="background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: 0.3s;">
-        <h1 style="color: #4CAF50; text-align: center; font-family: Arial, sans-serif; margin: 0; font-size: 12px;">NFTFans Token Chat</h1>
+    <div class="toggle-container">
+        <div class="toggle-btn" onclick="toggleDarkMode()"></div>
     </div>
 
-    <textarea id="commentText" placeholder="Write your text here..."></textarea>
-   <button style="background-color: #4caf50; color: white;" onclick="postComment()">Participate</button>
-<button style="background-color: #f44336; color: white;" onclick="postNewsComment()">Post News</button>
-<button style="background-color: #2196F3; color: white;" onclick="postArticleComment()">Post Article</button>
+    <div style="background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: 0.3s;">
+        <h1 style="color: #2196F3; text-align: center; font-family: Arial, sans-serif; margin: 0; font-size: 12px;">AI Article Posting Powered by NFTFANS</h1>
+    </div>
 
- <!-- Add a "News" button -->
+    <input type="text" id="articleTitle" placeholder="Title of the article...">
+    <input type="text" id="walletAddress" placeholder="Your wallet address...">
+    <textarea id="articleText" placeholder="Write your article here..."></textarea>
+    <button onclick="postArticle()">Post Article</button>
+
     <div class="error" id="errorMessage"></div>
     
-    <div class="comments" id="commentsSection">
-        <!-- Comments will be displayed here -->
+    <div class="articles" id="articlesSection">
+        <!-- Articles will be displayed here -->
     </div>
 </div>
 
 <script>
-    // Soft color palette
-    const softColors = ['#f2dede', '#faf2cc', '#d9edf7', '#dff0d8', '#fcf8e3', '#f4f4f4', '#f8d7da', '#cce5ff', '#d6e9c6', '#f5e3e3',
-                        '#f2e8d4', '#dbe5e5', '#eaf2f8', '#f4f2f2', '#fff2e6', '#eaeaea', '#e5f3f3', '#e8f8f5', '#edebf2', '#f7f8f9',
-                        '#f3f9f1', '#fcf8f2', '#fcf2f2', '#fef3e2', '#f8f9fa', '#f2e6ff', '#e9e7ef', '#e2edf7', '#d6f5d6',
-                        '#f5d6f5', '#f6e2b3', '#d5e5d5', '#d9e3d3', '#fadbd8', '#f5f6cb', '#d6eaf8', '#f5e9f5', '#e6f1ff', '#f5e9f5',
-                        '#f5f5e5', '#fcf2f5', '#e1f5e1', '#f5e4e4', '#e5f5f5', '#f5e5f5', '#e3f3e3', '#f5e3e3', '#e8e8e8', '#e1f5f5'];
+    var darkModeEnabled = false;
+
+    function toggleDarkMode() {
+        darkModeEnabled = !darkModeEnabled;
+        applyDarkMode();
+    }
+
+    function applyDarkMode() {
+        var elements = document.querySelectorAll('body, .container, .article, .title');
+        elements.forEach(function(element) {
+            element.classList.toggle('dark-mode', darkModeEnabled);
+        });
+    }
 
     // Configure AWS SDK
     AWS.config.update({
         region: 'eu-north-1',
-        credentials: new AWS.Credentials('AKIAVRUVVVUMTKXLCDO6', '2PkALOW/h0MecUTcWdNkAxQM8mNhV33H7nH9sTGq')
+        credentials: new AWS.Credentials('AKIAVRUVVVUMSVIVK2E2', 'LXc6zMSQtlIUl/ONxOYgrgqL8VT014eeUyVimR+Y')
     });
-    
+
     var dynamodb = new AWS.DynamoDB.DocumentClient();
-    var tableName = 'nftfan'; // Updated table name
+    var tableName = 'nftfan2'; // Updated table name for articles
     
-    // Load comments from DynamoDB when the page loads
+    // Load articles from DynamoDB when the page loads
     window.onload = function() {
-        loadComments();
+        loadArticles();
     };
     
-    function postComment() {
-        var commentText = document.getElementById("commentText").value.trim(); // Trim whitespace from the input
-        postCommentToDynamoDB(commentText);
+    function postArticle() {
+        var articleTitle = document.getElementById("articleTitle").value.trim();
+        var walletAddress = document.getElementById("walletAddress").value.trim();
+        var articleText = document.getElementById("articleText").value.trim();
+        
+        if (!articleTitle || !walletAddress || !articleText) {
+            displayError("Please fill in all fields.");
+            return;
+        }
+
+        // Check if article text exceeds the word limit
+        var wordCount = articleText.split(/\s+/).length;
+        if (wordCount < 501 || wordCount > 1501) {
+            displayError("Please make sure your article is between 501 and 1501 words.");
+            return;
+        }
+
+        // Call postArticleToDynamoDB to save the article
+        postArticleToDynamoDB(articleTitle, walletAddress, articleText);
     }
 
-function postNewsComment() {
-    var commentText = document.getElementById("commentText").value.trim(); // Trim whitespace from the input
+    function postArticleToDynamoDB(articleTitle, walletAddress, articleText) {
+        var params = {
+            TableName: tableName,
+            Item: {
+                nftfan2: Date.now().toString(), // Primary key attribute
+                articleId: 'article_' + Date.now().toString(), // Unique article ID
+                title: articleTitle,
+                wallet: walletAddress,
+                text: articleText,
+                stars: 0 // Initial star count
+            }
+        };
 
-    // Check if comment text exceeds the maximum or minimum word limit
-    var wordCount = commentText.split(/\s+/).length;
-    if (wordCount < 5 || wordCount > 30) {
-        displayError("Please make sure your news comment is between 5 and 30 words.");
-        return;
+        dynamodb.put(params, function (err, data) {
+            if (err) {
+                displayError("Error posting article: " + err.message);
+            } else {
+                clearError();
+                console.log("Successfully posted article to DynamoDB", data);
+                loadArticles(); // Reload articles after posting
+            }
+        });
+
+        // Clear the input fields after posting the article
+        document.getElementById("articleTitle").value = "";
+        document.getElementById("walletAddress").value = "";
+        document.getElementById("articleText").value = "";
     }
     
-    commentText += " #News"; // Append #News to the comment text
-    postCommentToDynamoDB(commentText, true); // Pass true to indicate it's a news comment
-}
-
-function postArticleComment() {
-    var commentText = document.getElementById("commentText").value.trim(); // Trim whitespace from the input
-
-    // Check if comment text exceeds the word limit
-    var wordCount = commentText.split(/\s+/).length;
-    if (wordCount < 501 || wordCount > 1501) {
-        displayError("Please make sure your article comment is between 501 and 1501 words.");
-        return;
-    }
-
-    // Append #Article to the comment text
-    commentText += " #Article";
-
-    // Call postCommentToDynamoDB with the fourth argument indicating it's an article comment
-    postCommentToDynamoDB(commentText, false, true, true);
-}
-
-function postCommentToDynamoDB(commentText, isNews, isArticle, isArticleComment) {
-    // Check if it's an article comment and set the border color accordingly
-    if (isArticleComment) {
-        document.getElementById("commentText").style.border = "2px solid black";
-    } else {
-        document.getElementById("commentText").style.border = isNews ? "2px solid red" : "1px solid";
-    }
-
-    // Your existing code for posting comment to DynamoDB...
-}
-
-
-
-
-
-function postCommentToDynamoDB(commentText, isNews, isArticle) {
-    // Check if it's not an article comment and the comment text exceeds 500 words
-    if (!isArticle && commentText.split(/\s+/).length > 500) {
-        displayError("Please limit your comment to 500 words or less.");
-        return;
-    }
-
-    if (commentText === "") {
-        displayError("Please enter a comment!");
-        return;
-    }
-
-    var params = {
-        TableName: tableName,
-        Item: {
-            nftfan: Date.now().toString(), // Primary key attribute
-            commentId: 'comment_' + Date.now().toString(), // Unique comment ID
-            text: commentText
-        }
-    };
-
-    dynamodb.put(params, function (err, data) {
-        if (err) {
-            displayError("Error saving comment to DynamoDB: " + err.message);
-        } else {
-            clearError();
-            console.log("Successfully saved comment to DynamoDB", data);
-            loadComments(); // Reload comments after saving
-        }
-    });
-
-    // Clear the textarea after posting the comment
-    document.getElementById("commentText").value = "";
-
-    // Add 2px red border for news comments
-    if (isNews) {
-        document.getElementById("commentText").style.border = "2px solid red";
-    } else {
-        document.getElementById("commentText").style.border = "1px solid";
-    }
-}
-
-    
-    function loadComments() {
+    function loadArticles() {
         var params = {
             TableName: tableName
         };
         
         dynamodb.scan(params, function(err, data) {
             if (err) {
-                displayError("Error loading comments from DynamoDB: " + err.message);
+                displayError("Error loading articles from DynamoDB: " + err.message);
             } else {
                 clearError();
-                console.log("Successfully loaded comments from DynamoDB", data);
-                displayComments(data.Items);
+                console.log("Successfully loaded articles from DynamoDB", data);
+                displayArticles(data.Items);
             }
         });
     }
 
-function displayComments(comments) {
-    // Sort comments by timestamp in descending order (latest on top)
-    comments.sort(function(a, b) {
-        return b.nftfan - a.nftfan;
+   function displayArticles(articles) {
+    var articlesSection = document.getElementById("articlesSection");
+    articlesSection.innerHTML = ""; // Clear existing articles
+
+    // Sort articles by timestamp in descending order (latest on top)
+    articles.sort(function(a, b) {
+        return b.nftfan2 - a.nftfan2;
     });
 
-    var commentsSection = document.getElementById("commentsSection");
-    commentsSection.innerHTML = ""; // Clear existing comments
+    articles.forEach(function(article) {
+        var articleNode = document.createElement("div");
+        articleNode.className = "article";
 
-    comments.forEach(function(comment) {
-        var commentNode = document.createElement("div");
-        commentNode.className = "comment";
+        // Add title bar
+        var titleBar = document.createElement("div");
+        titleBar.className = "title-bar";
 
-        // Apply 2px red border if the comment contains #News
-        if (comment.text.includes("#News")) {
-            commentNode.style.border = "1px solid red";
-        }
-		 // Apply 2px red border if the comment contains #News
-        if (comment.text.includes("#Article")) {
-            commentNode.style.border = "1px solid Black";
-        }
+        // Add title
+        var titleNode = document.createElement("div");
+        titleNode.className = "title";
+        titleNode.innerText = article.title;
+        titleBar.appendChild(titleNode);
 
-        // Generate random soft color background
-        var randomColor = softColors[Math.floor(Math.random() * softColors.length)];
-        commentNode.style.backgroundColor = randomColor;
+        // Create button for tokens earned
+        var tokensButton = document.createElement("button");
+        tokensButton.className = "tokens-button";
+        tokensButton.style.fontSize = "8px";
+        tokensButton.innerText = "Tokens Earned: " + calculateTokensEarned(article.text);
+        titleBar.appendChild(tokensButton);
 
-        // Parse the timestamp into a Date object
-        var timestamp = new Date(parseInt(comment.nftfan));
-        if (isNaN(timestamp.getTime())) {
-            console.error("Invalid timestamp:", comment.nftfan);
-            return;
-        }
+        articleNode.appendChild(titleBar);
 
-        // Format the date and time strings
-        var options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
-        var dateString = timestamp.toLocaleDateString(undefined, options);
+        // Add posted by and wallet address
+        var postedByNode = document.createElement("p");
+        postedByNode.innerText = "Posted by: ";
+        var walletNode = document.createElement("span");
+        walletNode.className = "wallet";
+        walletNode.innerText = article.wallet;
+        postedByNode.appendChild(walletNode);
+        articleNode.appendChild(postedByNode);
 
-        // Process comment text to make links clickable, style crypto addresses, text after '@', '#' and '!'
-        var processedCommentText = comment.text
-            .replace(/(https?:\/\/[^\s]+)/g, function(url) {
-                return "<a href='" + url + "' target='_blank' style='font-size: 6px; color: red;'>" + url + "</a>";
-            })
-            .replace(/0x[\da-fA-F]{40}/g, function(address) {
-                return "<span style='font-size: 7px; color: red;'>" + address + "</span>";
-            })
-            .replace(/(@[^ ]+)/g, function(match) {
-                return "<span style='font-size: 14px; color: darkgrey; cursor: pointer;' onclick='showCommentsWithSymbol(\"" + match + "\")'>" + match + "</span>";
-            })
-            .replace(/(#[^\s]+)/g, function(match) {
-                return "<span style='font-size: 9px; color: red; cursor: pointer;' onclick='showCommentsWithSymbol(\"" + match + "\")'>" + match + "</span>";
-            })
-            .replace(/(![^\s]+)/g, function(match) {
-                return "<span style='font-size: 9px; color: green; cursor: pointer;' onclick='showCommentsWithSymbol(\"" + match + "\")'>" + match + "</span>";
-            })
-            .replace(/(\$[^\s]+)/g, function(match) {
-                return "<span style='font-size: 9px; color: darkblue; cursor: pointer;' onclick='showCommentsWithSymbol(\"" + match + "\")'>" + match + "</span>";
-            })
-            .replace(/(0x[\da-fA-F]{40})/g, function(match) {
-                return "<span style='font-size: 9px; color: darkcyan; cursor: pointer;' onclick='showCommentsWithSymbol(\"" + match + "\")'>" + match + "</span>";
-            });
+        // Add article text
+        var textNode = document.createElement("p");
+        textNode.innerText = article.text;
+        articleNode.appendChild(textNode);
 
-        commentNode.innerHTML = "<p style='font-size: 6px;'><strong>Posted on:</strong> " + dateString + "</p>" +
-            "<p><strong>Comment:</strong> " + processedCommentText + "</p>";
+        // Add datetime
+        var datetimeNode = document.createElement("p");
+        datetimeNode.className = "datetime";
+        datetimeNode.innerText = formatDateTime(article.nftfan2);
+        articleNode.appendChild(datetimeNode);
 
-        commentsSection.appendChild(commentNode);
+        articlesSection.appendChild(articleNode);
     });
 }
 
 
-    function showCommentsWithSymbol(symbol) {
-        var comments = document.getElementsByClassName("comment");
-        for (var i = 0; i < comments.length; i++) {
-            var commentText = comments[i].innerText || comments[i].textContent;
-            if (commentText.includes(symbol)) {
-                comments[i].style.display = "block"; // Show comments containing the symbol
-            } else {
-                comments[i].style.display = "none"; // Hide comments not containing the symbol
-            }
-        }
+// Function to calculate tokens earned (assuming 1 token per word)
+function calculateTokensEarned(text) {
+    var wordCount = text.split(/\s+/).length;
+    return wordCount; // 1 token per word
+}
+
+
+
+    function formatDateTime(timestamp) {
+        var date = new Date(parseInt(timestamp));
+        var options = {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric"
+        };
+        return date.toLocaleDateString(undefined, options);
     }
 
     function displayError(message) {
@@ -311,6 +341,12 @@ function displayComments(comments) {
         var errorMessage = document.getElementById("errorMessage");
         errorMessage.textContent = "";
     }
+
+    
+
+
+
+
 </script>
 
 </body>
