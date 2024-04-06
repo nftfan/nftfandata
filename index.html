@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Post Comments</title>
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.1002.0.min.js"></script>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+    }
+    .container {
+        width: 80%;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    textarea {
+        width: 100%;
+        height: 100px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+    button {
+        padding: 10px 20px;
+        background-color: #4caf50;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #45a049;
+    }
+    .comments {
+        margin-top: 20px;
+    }
+    .comment {
+        padding: 10px;
+        background-color: #f9f9f9;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+    .error {
+        color: red;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Post Comments</h2>
+    <textarea id="commentText" placeholder="Write your comment here..."></textarea>
+    <button onclick="postComment()">Post Comment</button>
+    <div class="error" id="errorMessage"></div>
+    
+    <div class="comments" id="commentsSection">
+        <!-- Comments will be displayed here -->
+    </div>
+</div>
+
+<script>
+    // Configure AWS SDK
+    AWS.config.update({
+        region: 'eu-north-1',
+        credentials: new AWS.Credentials('AKIAVRUVVVUMTKXLCDO6', '2PkALOW/h0MecUTcWdNkAxQM8mNhV33H7nH9sTGq')
+    });
+    
+    var dynamodb = new AWS.DynamoDB.DocumentClient();
+    var tableName = 'nftfan'; // Updated table name
+    
+    // Load comments from DynamoDB when the page loads
+    window.onload = function() {
+        loadComments();
+    };
+    
+    function postComment() {
+        var commentText = document.getElementById("commentText").value;
+        if(commentText.trim() === "") {
+            displayError("Please enter a comment!");
+            return;
+        }
+        
+        var params = {
+            TableName: tableName,
+            Item: {
+                nftfan: Date.now().toString(), // Primary key attribute
+                commentId: 'comment_' + Date.now().toString(), // Unique comment ID
+                text: commentText
+            }
+        };
+        
+        dynamodb.put(params, function(err, data) {
+            if (err) {
+                displayError("Error saving comment to DynamoDB: " + err.message);
+            } else {
+                clearError();
+                console.log("Successfully saved comment to DynamoDB", data);
+                loadComments(); // Reload comments after saving
+            }
+        });
+        
+        // Clear the textarea after posting the comment
+        document.getElementById("commentText").value = "";
+    }
+    
+    function loadComments() {
+        var params = {
+            TableName: tableName
+        };
+        
+        dynamodb.scan(params, function(err, data) {
+            if (err) {
+                displayError("Error loading comments from DynamoDB: " + err.message);
+            } else {
+                clearError();
+                console.log("Successfully loaded comments from DynamoDB", data);
+                displayComments(data.Items);
+            }
+        });
+    }
+    
+    function displayComments(comments) {
+        var commentsSection = document.getElementById("commentsSection");
+        commentsSection.innerHTML = ""; // Clear existing comments
+        
+        comments.forEach(function(comment) {
+            var commentNode = document.createElement("div");
+            commentNode.className = "comment";
+            commentNode.textContent = comment.text;
+            commentsSection.appendChild(commentNode);
+        });
+    }
+    
+    function displayError(message) {
+        var errorMessage = document.getElementById("errorMessage");
+        errorMessage.textContent = message;
+    }
+    
+    function clearError() {
+        var errorMessage = document.getElementById("errorMessage");
+        errorMessage.textContent = "";
+    }
+</script>
+
+</body>
+</html>
