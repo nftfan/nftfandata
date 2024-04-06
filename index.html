@@ -168,8 +168,9 @@
             return "<a href='" + url + "' target='_blank'>" + url + "</a>";
         });
         
-        commentNode.innerHTML = "<p><strong>Posted on:</strong> " + dateString + "</p>" +
+       commentNode.innerHTML = "<p style='font-size: 6px;'><strong>Posted on:</strong> " + dateString + "</p>" +
                                 "<p><strong>Comment:</strong> " + processedCommentText + "</p>";
+        
         
         commentsSection.appendChild(commentNode);
     });
