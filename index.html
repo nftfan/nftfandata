@@ -63,7 +63,7 @@
             background-color: #f2f2f2;
         }
 		.highlighted-row {
-    background-color: yellow; /* Change to any desired highlight color */
+    background-color: white; /* Change to any desired highlight color */
 }
 
     </style>
@@ -209,10 +209,7 @@ function displayWalletsAndUsernames(walletsAndUsernames) {
     var walletTableBody = document.getElementById("walletTableBody");
     walletTableBody.innerHTML = ""; // Clear existing entries
 
-    // Sort the array of items by date
-    walletsAndUsernames.sort(function(a, b) {
-        return new Date(a.date) - new Date(b.date);
-    });
+ 
 
     // Add column titles
     var headerRow = walletTableBody.insertRow(0);
