@@ -207,7 +207,7 @@ function highlightRowContainingUsername(data, username) {
 }
 
     
-     // Function to display wallets and usernames in reverse order
+// Function to display wallets and usernames in reverse order
 function displayWalletsAndUsernames(walletsAndUsernames) {
     var walletTableBody = document.getElementById("walletTableBody");
     walletTableBody.innerHTML = ""; // Clear existing entries
@@ -218,10 +218,19 @@ function displayWalletsAndUsernames(walletsAndUsernames) {
     walletsAndUsernames.forEach(function (item, index) {
         var row = walletTableBody.insertRow(index);
         row.insertCell(0).textContent = walletsAndUsernames.length - index; // Adjust the index to start from 1
-        var usernameCell = row.insertCell(1);
+        
+        // Insert the image in the row
+        var imageCell = row.insertCell(1);
+        var image = document.createElement("img");
+        image.src = "https://i.seadn.io/s/raw/files/749021b85f1f70dd027a146fd7532039.png?auto=format&dpr=1&w=10&h=10";
+        image.width = 10;
+        image.height = 10;
+        imageCell.appendChild(image);
+        
+        var usernameCell = row.insertCell(2);
         usernameCell.innerHTML = '<a href="https://twitter.com/' + item.twitterUsername.substring(1) + '">' + item.twitterUsername + '</a>';
-        row.insertCell(2).textContent = item.walletAddress;
-        row.insertCell(3).textContent = item.tokensWon.toLocaleString();
+        row.insertCell(3).textContent = item.walletAddress;
+        row.insertCell(4).textContent = item.tokensWon.toLocaleString();
 
         // Add click event listener to open Twitter profile
         usernameCell.addEventListener('click', function() {
@@ -229,6 +238,7 @@ function displayWalletsAndUsernames(walletsAndUsernames) {
         });
     });
 }
+
 
 
     
