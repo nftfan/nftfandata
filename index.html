@@ -185,7 +185,7 @@ function postWalletAndUsername() {
         });
     }
     
-    // Function to display wallets and usernames in reverse order
+     // Function to display wallets and usernames in reverse order
 function displayWalletsAndUsernames(walletsAndUsernames) {
     var walletTableBody = document.getElementById("walletTableBody");
     walletTableBody.innerHTML = ""; // Clear existing entries
@@ -196,11 +196,18 @@ function displayWalletsAndUsernames(walletsAndUsernames) {
     walletsAndUsernames.forEach(function (item, index) {
         var row = walletTableBody.insertRow(index);
         row.insertCell(0).textContent = walletsAndUsernames.length - index; // Adjust the index to start from 1
-        row.insertCell(1).textContent = item.twitterUsername;
+        var usernameCell = row.insertCell(1);
+        usernameCell.innerHTML = '<a href="https://twitter.com/' + item.twitterUsername.substring(1) + '">' + item.twitterUsername + '</a>';
         row.insertCell(2).textContent = item.walletAddress;
         row.insertCell(3).textContent = item.tokensWon.toLocaleString();
+
+        // Add click event listener to open Twitter profile
+        usernameCell.addEventListener('click', function() {
+            window.open('https://twitter.com/' + item.twitterUsername.substring(1), '_blank');
+        });
     });
 }
+
 
     
     // Function to display error messages
