@@ -62,6 +62,10 @@
         th {
             background-color: #f2f2f2;
         }
+		.highlighted-row {
+    background-color: yellow; /* Change to any desired highlight color */
+}
+
     </style>
 </head>
 <body>
@@ -169,21 +173,39 @@ function postWalletAndUsername() {
 
     
     // Function to load wallets and usernames from DynamoDB
-    function loadWalletsAndUsernames() {
-        var params = {
-            TableName: tableName
-        };
-        
-        dynamodb.scan(params, function(err, data) {
-            if (err) {
-                displayError("Error loading wallets and usernames from DynamoDB: " + err.message);
-            } else {
-                clearError();
-                console.log("Successfully loaded wallets and usernames from DynamoDB", data);
-                displayWalletsAndUsernames(data.Items);
-            }
-        });
+function loadWalletsAndUsernames() {
+    var params = {
+        TableName: tableName
+    };
+    
+    dynamodb.scan(params, function(err, data) {
+        if (err) {
+            displayError("Error loading wallets and usernames from DynamoDB: " + err.message);
+        } else {
+            clearError();
+            console.log("Successfully loaded wallets and usernames from DynamoDB", data);
+            displayWalletsAndUsernames(data.Items);
+
+            // Highlight row containing @nftfanstoken
+            highlightRowContainingUsername(data.Items, "@nftfanstoken");
+        }
+    });
+}
+
+// Function to highlight the row containing a specific username
+function highlightRowContainingUsername(data, username) {
+    var walletTableBody = document.getElementById("walletTableBody");
+
+    for (var i = 0; i < data.length; i++) {
+        if (data[i].twitterUsername === username) {
+            // Get the row corresponding to the username and add a CSS class for highlighting
+            var row = walletTableBody.rows[i];
+            row.classList.add("highlighted-row");
+            break; // Stop searching after finding the first occurrence
+        }
     }
+}
+
     
      // Function to display wallets and usernames in reverse order
 function displayWalletsAndUsernames(walletsAndUsernames) {
