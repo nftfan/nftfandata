@@ -205,15 +205,14 @@ function highlightRowContainingUsername(data, username) {
     }
 }
 
-    
-// Function to display wallets and usernames sorted by date
+// Function to display wallets and usernames sorted by tokens won
 function displayWalletsAndUsernames(walletsAndUsernames) {
     var walletTableBody = document.getElementById("walletTableBody");
     walletTableBody.innerHTML = ""; // Clear existing entries
 
-    // Sort the array of items by date
+    // Sort the array of items by tokens won (descending order)
     walletsAndUsernames.sort(function(a, b) {
-        return new Date(a.date) - new Date(b.date);
+        return b.tokensWon - a.tokensWon;
     });
 
     // Add column titles
@@ -243,7 +242,7 @@ function displayWalletsAndUsernames(walletsAndUsernames) {
         nftCell.appendChild(openSeaLink);
         
         var usernameCell = row.insertCell(2);
-        usernameCell.innerHTML = '<a href="https://twitter.com/' + item.twitterUsername.substring(1) + '">' + item.twitterUsername + '</a>';
+        usernameCell.innerHTML = '<a href="https://twitter.com/' + item.twitterUsername.substring(1) + '" style="color: red;">' + item.twitterUsername + '</a>';
         row.insertCell(3).textContent = item.walletAddress;
         row.insertCell(4).textContent = item.tokensWon.toLocaleString();
 
@@ -253,6 +252,7 @@ function displayWalletsAndUsernames(walletsAndUsernames) {
         });
     });
 }
+
 
 
 
