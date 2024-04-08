@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post Wallets and Usernames</title>
+    <title>NFT FANS TOKEN DATABASE</title>
     <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1002.0.min.js"></script>
         <style>
         body {
@@ -73,7 +73,7 @@
 <body>
 
 <div class="container">
-    <h2>NFTFANS TOKEN AIRDROP</h2>
+    <h2>NFTFANS TOKEN DATABASE</h2>
     <input type="text" id="walletAddress" placeholder="Enter your wallet address">
     <input type="text" id="twitterUsername" placeholder="Enter your Twitter username (starting with '@')">
     <button onclick="postWalletAndUsername()">Post</button>
@@ -232,7 +232,13 @@ function displayWalletsAndUsernames(walletsAndUsernames) {
         // Insert the image with OpenSea link in the row
         var nftCell = row.insertCell(1);
         var image = document.createElement("img");
-        image.src = "https://i.seadn.io/s/raw/files/749021b85f1f70dd027a146fd7532039.png?auto=format&dpr=1&w=10&h=10";
+        if (item.twitterUsername === '@nftfanstoken') {
+            image.src = "https://i.seadn.io/s/raw/files/4ee38fcd8ce97b2f52ab5257e036c359.png?auto=format&dpr=1&w=1000";
+        } else if (item.twitterUsername === '@cottons123') {
+            image.src = "https://i.seadn.io/s/raw/files/6f229cee3648016dcc20bfb7dde5aed7.png?auto=format&dpr=1&w=1000";
+        } else {
+            image.src = "https://i.seadn.io/s/raw/files/749021b85f1f70dd027a146fd7532039.png?auto=format&dpr=1&w=10&h=10";
+        }
         image.width = 30;
         image.height = 30;
         var openSeaLink = document.createElement("a");
@@ -252,7 +258,6 @@ function displayWalletsAndUsernames(walletsAndUsernames) {
         });
     });
 }
-
 
 
 
