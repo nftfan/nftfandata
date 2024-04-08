@@ -80,10 +80,7 @@
     <table id="walletTable">
         <thead>
             <tr>
-                <th>#</th>
-                <th>Username</th>
-                <th>Wallet Address</th>
-                <th>Tokens Won</th>
+                
             </tr>
         </thead>
         <tbody id="walletTableBody">
@@ -207,25 +204,37 @@ function highlightRowContainingUsername(data, username) {
 }
 
     
-// Function to display wallets and usernames in reverse order
+// Function to display wallets and usernames sorted by date
 function displayWalletsAndUsernames(walletsAndUsernames) {
     var walletTableBody = document.getElementById("walletTableBody");
     walletTableBody.innerHTML = ""; // Clear existing entries
 
-    // Reverse the array of items
-    walletsAndUsernames.reverse();
+    // Sort the array of items by date
+    walletsAndUsernames.sort(function(a, b) {
+        return new Date(a.date) - new Date(b.date);
+    });
+
+    // Add column titles
+    var headerRow = walletTableBody.insertRow(0);
+    headerRow.insertCell(0).textContent = "#";
+    headerRow.insertCell(1).textContent = "NFTFAN";
+    headerRow.insertCell(2).textContent = "X username";
+    headerRow.insertCell(3).textContent = "Wallet";
+    headerRow.insertCell(4).textContent = "Tokens Won";
 
     walletsAndUsernames.forEach(function (item, index) {
-        var row = walletTableBody.insertRow(index);
+        var row = walletTableBody.insertRow(index + 1); // Start from the second row (index + 1)
+
+        // Insert the index in the row
         row.insertCell(0).textContent = walletsAndUsernames.length - index; // Adjust the index to start from 1
         
         // Insert the image in the row
-        var imageCell = row.insertCell(1);
+        var nftCell = row.insertCell(1);
         var image = document.createElement("img");
         image.src = "https://i.seadn.io/s/raw/files/749021b85f1f70dd027a146fd7532039.png?auto=format&dpr=1&w=10&h=10";
         image.width = 10;
         image.height = 10;
-        imageCell.appendChild(image);
+        nftCell.appendChild(image);
         
         var usernameCell = row.insertCell(2);
         usernameCell.innerHTML = '<a href="https://twitter.com/' + item.twitterUsername.substring(1) + '">' + item.twitterUsername + '</a>';
@@ -238,6 +247,9 @@ function displayWalletsAndUsernames(walletsAndUsernames) {
         });
     });
 }
+
+
+
 
 
 
