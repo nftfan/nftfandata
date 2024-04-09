@@ -28,7 +28,7 @@ body {
     background-color: #1e1e1e;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    overflow-x: auto;
+    overflow-x: auto; /* Enable horizontal scrolling */
     overflow-y: hidden; /* Hide vertical scrollbar */
 }
 
@@ -70,7 +70,8 @@ button:hover {
 
 /* Table styles */
 table {
-    width: 100%;
+    width: auto; /* Allow table to adjust width based on content */
+    max-width: 100%; /* Limit table to fit within the container */
     border-collapse: collapse;
     font-size: 14px;
     color: #fff;
@@ -80,6 +81,14 @@ th, td {
     border: 1px solid #444;
     padding: 8px;
     text-align: left;
+    word-wrap: break-word; /* Wrap long words */
+    overflow: hidden; /* Hide overflow */
+    text-overflow: ellipsis; /* Show ellipsis for overflow */
+}
+
+th:nth-child(-n+3),
+td:nth-child(-n+3) {
+    width: auto; /* Allow first three columns to adjust width based on content */
 }
 
 th {
@@ -97,6 +106,8 @@ th {
     font-size: 20px;
     color: #fff;
 }
+
+
 
     </style>
 
