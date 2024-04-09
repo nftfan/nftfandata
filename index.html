@@ -5,94 +5,102 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NFT FANS TOKEN DATABASE</title>
     <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1002.0.min.js"></script>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #0d1117; /* Dark background */
-        color: #c9d1d9; /* Light text color */
-        font-size: 16px;
-    }
+ <style>
+/* Resetting default margin and padding for all elements */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    .container {
-        width: 90%;
-        margin: 20px auto;
-        padding: 20px;
-        box-sizing: border-box;
-        background-color: #161b22; /* Dark container background */
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
+/* Body styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+    color: #fff;
+}
 
-    input[type="text"] {
-        width: 100%;
-        padding: 12px;
-        border: 1px solid #30363d; /* Dark border color */
-        border-radius: 4px;
-        margin-bottom: 10px;
-        font-size: 16px;
-        background-color: #161b22; /* Dark input background */
-        color: #c9d1d9; /* Light text color */
-    }
+/* Container styles */
+.container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+}
 
-    button {
-        width: 100%;
-        padding: 12px;
-        background-color: #238636; /* Green button color */
-        color: #fff;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 16px;
-        transition: background-color 0.3s ease;
-    }
+/* Input styles */
+input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #333;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    background-color: #333;
+    color: #fff;
+}
 
-    button:hover {
-        background-color: #1d7432; /* Darker green on hover */
-    }
+/* Button styles */
+button {
+    padding: 12px 20px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
 
-    .error {
-        color: #ff6b6b; /* Red error message color */
-        margin-bottom: 10px;
-        font-size: 14px;
-    }
+button:hover {
+    background-color: #45a049;
+}
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-        font-size: 16px;
-        color: #c9d1d9;
-    }
+/* Error message styles */
+.error {
+    color: #ff5555;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
 
-    th, td {
-        border: 1px solid #30363d;
-        padding: 8px;
-        text-align: left;
-    }
+/* Table styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    color: #fff;
+}
 
-    th {
-        background-color: #0d1117; /* Dark header background */
-    }
+th, td {
+    border: 1px solid #444;
+    padding: 8px;
+    text-align: left;
+}
 
-    .highlighted-row {
-        background-color: #30363d; /* Dark row highlight color */
-    }
+th {
+    background-color: #333;
+}
 
-    /* Dark mode toggle */
-    .dark-mode-toggle {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        z-index: 9999;
-        background-color: transparent;
-        border: none;
-        cursor: pointer;
-        font-size: 20px;
-        color: #c9d1d9;
-    }
-</style>
+/* Dark mode toggle button styles */
+.dark-mode-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    color: #fff;
+}
+
+    </style>
+
+
+
+
 
 
 
