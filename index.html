@@ -13,18 +13,6 @@
             text-align: center;
         }
         
-        @keyframes rainbow-border {
-            0% {
-                border-color: red;
-            }
-            50% {
-                border-color: yellow;
-            }
-            100% {
-                border-color: red;
-            }
-        }
-
         .search-bar {
             margin-bottom: 20px;
         }
@@ -39,7 +27,6 @@
             font-size: 16px;
             outline: none;
             transition: background-color 0.3s ease;
-            animation: rainbow-border 2s infinite; /* Adjusted animation duration to 2s */
         }
 
         .search-bar input[type="text"]::placeholder {
@@ -80,12 +67,14 @@
 
         .card:hover {
             transform: scale(1.05); /* Increase size on hover */
-            animation: rainbow-border 2s infinite; /* Add animation to border on hover */
         }
 
         .card img {
             width: 100%;
-            height: auto;
+            height: 100%;
+            object-fit: cover;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
         }
 
         .card-content {
@@ -93,69 +82,62 @@
         }
 
         .card-address {
-            font-size: 7px;
-            margin-bottom: 0; /* Remove bottom margin */
+            font-size: 14px;
+            margin-bottom: 0;
             text-align: left;
-            overflow-wrap: break-word; /* Wrap long addresses */
+            overflow-wrap: break-word;
             word-wrap: break-word;
             hyphens: auto;
-            line-height: 1.2; /* Adjust line height */
+            line-height: 1.2;
         }
-       
     </style>
 </head>
 <body>
 
 <div class="search-bar">
     <form id="postForm">
-        <input type="text" id="walletInput" placeholder="Post your text...">
+        <input type="text" id="walletInput" placeholder="Post your wallet address...">
+        <input type="text" id="imageUrlInput" placeholder="Image URL">
         <button type="submit">Post</button>
     </form>
 </div>
 <div class="reward-info">
-  <p style="color: #999; font-size: 8px;">Next Reward in:</p>
-  <p id="countdown" style="color: #999; font-size: 8px;"></p>
-  <p style="color: #999; font-size: 8px;">Amount: 1KT $nftfan</p>
+    <p style="color: #999; font-size: 8px;">Next Reward in:</p>
+    <p id="countdown" style="color: #999; font-size: 8px;"></p>
+    <p style="color: #999; font-size: 8px;">Amount: 1KT $nftfan</p>
 </div>
 
-<!-- Wallet Cards -->
 <div id="walletCards">
     <!-- Wallet Cards will be displayed here -->
 </div>
 
 <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1002.0.min.js"></script>
 <script>
-    // Configure AWS SDK
     AWS.config.update({
-        region: 'eu-north-1', // Change this to your AWS region
+        region: 'eu-north-1',
         credentials: new AWS.Credentials('AKIAVRUVVVUMTKXLCDO6', '2PkALOW/h0MecUTcWdNkAxQM8mNhV33H7nH9sTGq')
     });
 
     var dynamodb = new AWS.DynamoDB.DocumentClient();
-    var tableName = 'nftfan'; // Updated table name
+    var tableName = 'nftfan';
 
     document.getElementById('postForm').addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent form submission
+        event.preventDefault();
         var walletInput = document.getElementById('walletInput').value.trim().toLowerCase();
+        var imageUrl = document.getElementById('imageUrlInput').value.trim();
 
-        // Post wallet with picture to DynamoDB
-        postWalletWithPicture(walletInput);
+        postWalletWithPicture(walletInput, imageUrl);
     });
 
-    function postWalletWithPicture(walletAddress) {
-        // Generate a unique identifier for the item
+    function postWalletWithPicture(walletAddress, imageUrl) {
         var nftfanId = 'nftfan_' + Date.now();
 
-        // URL of the picture to be associated with the wallet
-        var pictureUrl = 'https://i.seadn.io/s/raw/files/749021b85f1f70dd027a146fd7532039.png?auto=format&dpr=1&w=1000';
-
-        // Put item into DynamoDB
         var params = {
             TableName: tableName,
             Item: {
-                nftfan: nftfanId, // Include a unique identifier
+                nftfan: nftfanId,
                 walletAddress: walletAddress,
-                pictureUrl: pictureUrl // Include the URL of the picture
+                pictureUrl: imageUrl
             }
         };
 
@@ -164,47 +146,39 @@
                 console.error("Error posting wallet with picture to DynamoDB:", err);
             } else {
                 console.log("Successfully posted wallet with picture to DynamoDB:", data);
-                // After posting, display the wallet with the picture
-                displayWalletWithPicture(walletAddress, pictureUrl);
+                displayWalletWithPicture(walletAddress, imageUrl);
             }
         });
     }
 
-    function displayWalletWithPicture(walletAddress, pictureUrl) {
+    function displayWalletWithPicture(walletAddress, imageUrl) {
         var walletCards = document.getElementById('walletCards');
 
-        // Create a card element
         var card = document.createElement('div');
         card.classList.add('card');
 
-        // Create an image element and set its source to the picture URL
         var img = document.createElement('img');
-        img.src = pictureUrl;
+        img.src = imageUrl;
         img.alt = 'Avatar';
 
-        // Create a card content element
         var cardContent = document.createElement('div');
         cardContent.classList.add('card-content');
 
-        // Create a paragraph element for the wallet address
         var addressParagraph = document.createElement('p');
         addressParagraph.classList.add('card-address');
         addressParagraph.textContent = walletAddress;
 
-        // Append elements to the card content
         cardContent.appendChild(addressParagraph);
 
-        // Append image and content to the card
         card.appendChild(img);
         card.appendChild(cardContent);
 
-        // Append the card to the wallet cards container
         walletCards.appendChild(card);
     }
 
-    // Load wallet cards when the page loads
     window.onload = function() {
         loadWalletCards();
+        calculateCountdown();
     };
 
     function loadWalletCards() {
@@ -217,44 +191,31 @@
                 console.error("Error loading wallet cards from DynamoDB:", err);
             } else {
                 console.log("Successfully loaded wallet cards from DynamoDB:", data);
-                // Display the wallet cards
                 data.Items.forEach(function(item) {
                     displayWalletWithPicture(item.walletAddress, item.pictureUrl);
                 });
             }
         });
     }
-</script>
-<script>
 
-// Function to calculate the countdown
-function calculateCountdown() {
-  // Set the date of April 30, 2024
-  const targetDate = new Date("2024-04-30T00:00:00Z");
-  // Get the current date
-  const currentDate = new Date();
-  // Calculate the difference in milliseconds
-  const difference = targetDate - currentDate;
+    function calculateCountdown() {
+        const targetDate = new Date("2024-04-30T00:00:00Z");
+        const currentDate = new Date();
+        const difference = targetDate - currentDate;
   
-  // Calculate days, hours, minutes, and seconds
-  const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-  const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
   
-  // Display the countdown
-  document.getElementById("countdown").textContent = `${days} days ${hours} hours ${minutes} minutes ${seconds} seconds`;
-}
+        document.getElementById("countdown").textContent = `${days} days ${hours} hours ${minutes} minutes ${seconds} seconds`;
+    }
 
-// Call the function once to display the initial countdown
-calculateCountdown();
-
-// Update the countdown every second
-setInterval(calculateCountdown, 1000);
-
+    setInterval(calculateCountdown, 1000);
 
 </script>
 
 </body>
 </html>
+
 
