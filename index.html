@@ -3,283 +3,266 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NFT FANS TOKEN DATABASE</title>
-    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1002.0.min.js"></script>
-        <style>
+    <title>NFT Fans Wallets</title>
+    <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #0d1117;
-            font-size: 6px; /* Set global font size to 6px */
+            background-color: #1f1f1f; /* Dark background color */
+            color: #fff; /* Text color */
+            padding: 20px;
+            text-align: center;
         }
-        .container {
-            width: 100%;
+        
+        @keyframes rainbow-border {
+            0% {
+                border-color: red;
+            }
+            50% {
+                border-color: yellow;
+            }
+            100% {
+                border-color: red;
+            }
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+        }
+
+        .search-bar input[type="text"] {
+            width: 300px; /* Adjust width as needed */
             padding: 10px;
-            box-sizing: border-box;
-            background-color: #0d1117;
-            
-           
-        }
-        input[type="text"] {
-            width: 90%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            font-size: 6px; /* Set font size for input fields */
-        }
-        button {
-            width: 25%;
-            padding: 10px 20px;
-            background-color: #4caf50;
+            border: 2px solid;
+            border-radius: 20px;
+            background-color: #333; /* Darker background color */
             color: #fff;
+            font-size: 16px;
+            outline: none;
+            transition: background-color 0.3s ease;
+            animation: rainbow-border 2s infinite; /* Adjusted animation duration to 2s */
+        }
+
+        .search-bar input[type="text"]::placeholder {
+            color: #999; /* Placeholder text color */
+        }
+
+        .search-bar input[type="text"]:focus {
+            background-color: #555; /* Darker background color on focus */
+        }
+
+        .search-bar button {
+            padding: 10px 20px;
             border: none;
-            border-radius: 5px;
+            border-radius: 20px;
+            background-color: #4CAF50; /* Green button color */
+            color: #fff;
+            font-size: 12px;
             cursor: pointer;
-            font-size: 6px; /* Set font size for buttons */
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
         }
-        button:hover {
-            background-color: #45a049;
-        }
-        .error {
-            color: red;
-            margin-bottom: 10px;
-            font-size: 6px; /* Set font size for error messages */
-        }
-     table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    font-size: 6px; /* Set font size for table */
-    color: #8b949e; /* Set font color for table */
-}
 
-        th, td {
-            border: 1px solid #ddd;
-            padding: 4px;
-            text-align: left;
-            font-size: 6px; /* Set font size for table cells */
+        .search-bar button:hover {
+            background-color: #45a049; /* Darker green color on hover */
         }
-        th {
-            background-color: #f2f2f2;
-        }
-		.highlighted-row {
-    background-color: white; /* Change to any desired highlight color */
-}
 
+        .card {
+            background-color: #333; /* Darker card background color */
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin: 10px;
+            width: 100px;
+            display: inline-block;
+            transition: transform 0.3s ease-in-out; /* Add transition effect */
+            border: 1px solid; /* Add border */
+        }
+
+        .card:hover {
+            transform: scale(1.05); /* Increase size on hover */
+            animation: rainbow-border 2s infinite; /* Add animation to border on hover */
+        }
+
+        .card img {
+            width: 100%;
+            height: auto;
+        }
+
+        .card-content {
+            padding: 15px;
+        }
+
+        .card-address {
+            font-size: 7px;
+            margin-bottom: 0; /* Remove bottom margin */
+            text-align: center;
+            overflow-wrap: break-word; /* Wrap long addresses */
+            word-wrap: break-word;
+            hyphens: auto;
+            line-height: 1.2; /* Adjust line height */
+        }
+        .tokens-collected {
+            font-size: 7px;
+            margin-bottom: 0; /* Remove bottom margin */
+            text-align: center;
+            overflow-wrap: break-word; /* Wrap long addresses */
+            word-wrap: break-word;
+            hyphens: auto;
+            line-height: 1.2; /* Adjust line height */
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>NFTFANS TOKEN DATABASE</h2>
-    <input type="text" id="walletAddress" placeholder="Enter your wallet address">
-    <input type="text" id="twitterUsername" placeholder="Enter your Twitter username (starting with '@')">
-    <button onclick="postWalletAndUsername()">Post</button>
-    <div class="error" id="errorMessage"></div>
-    
-    <table id="walletTable">
-        <thead>
-            <tr>
-                
-            </tr>
-        </thead>
-        <tbody id="walletTableBody">
-            <!-- Wallets and usernames will be displayed here -->
-        </tbody>
-    </table>
+<div class="search-bar">
+    <form id="postForm">
+        <input type="text" id="walletInput" placeholder="Paste your wallet">
+        <button type="submit">Post</button>
+    </form>
+</div>
+<div class="reward-info">
+  <p style="color: #999; font-size: 8px;">Next Reward in:</p>
+  <p id="countdown" style="color: #999; font-size: 8px;"></p>
+  <p style="color: #999; font-size: 8px;">Amount: 1KT $nftfan</p>
 </div>
 
+<!-- Wallet Cards -->
+<div id="walletCards">
+    <!-- Wallet Cards will be displayed here -->
+</div>
+
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.1002.0.min.js"></script>
 <script>
     // Configure AWS SDK
     AWS.config.update({
-        region: 'eu-north-1',
+        region: 'eu-north-1', // Change this to your AWS region
         credentials: new AWS.Credentials('AKIAVRUVVVUMTKXLCDO6', '2PkALOW/h0MecUTcWdNkAxQM8mNhV33H7nH9sTGq')
     });
-    
+
     var dynamodb = new AWS.DynamoDB.DocumentClient();
     var tableName = 'nftfan'; // Updated table name
-    
-    // Array to store unique wallets and usernames
-var uniqueWallets = [];
-var uniqueUsernames = [];
 
-// Function to post wallets and usernames
-function postWalletAndUsername() {
-    var walletAddress = document.getElementById("walletAddress").value.trim();
-    var twitterUsername = document.getElementById("twitterUsername").value.trim();
-    
-    // Check if wallet address and username are provided
-    if (!walletAddress || !twitterUsername) {
-        displayError("Both wallet address and Twitter username are required.");
-        return;
-    }
-    
-    // Check if Twitter username starts with '@'
-    if (!twitterUsername.startsWith('@')) {
-        displayError("Twitter username must start with '@'.");
-        return;
-    }
-    
-    // Check if wallet or username already exists
-    if (uniqueWallets.includes(walletAddress)) {
-        displayError("This wallet address has already been submitted.");
-        return;
-    }
-    
-    if (uniqueUsernames.includes(twitterUsername)) {
-        displayError("This Twitter username has already been submitted.");
-        return;
-    }
-    
-    // Generate a unique identifier for the item
-    var nftfanId = 'nftfan_' + Date.now();
-    
-    // Generate random tokens won and multiply by 1 trillion
-    var tokensWon = (Math.floor(Math.random() * 1000) + 1) * 1000000000000;
-    
-    // Put item into DynamoDB
-    var params = {
-        TableName: tableName,
-        Item: {
-            nftfan: nftfanId, // Include a unique identifier
-            walletAddress: walletAddress,
-            twitterUsername: twitterUsername,
-            tokensWon: tokensWon // Set the tokens won
-        }
-    };
-    
-    dynamodb.put(params, function(err, data) {
-        if (err) {
-            displayError("Error saving wallet and username to DynamoDB: " + err.message);
-        } else {
-            clearError();
-            console.log("Successfully saved wallet and username to DynamoDB", data);
-            // Update arrays with new wallet address and username
-            uniqueWallets.push(walletAddress);
-            uniqueUsernames.push(twitterUsername);
-            loadWalletsAndUsernames(); // Reload wallets and usernames after saving
-        }
-    });
-    
-    // Clear input fields after posting
-    document.getElementById("walletAddress").value = "";
-    document.getElementById("twitterUsername").value = "";
-}
+    document.getElementById('postForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent form submission
+        var walletInput = document.getElementById('walletInput').value.trim().toLowerCase();
 
-
-
-    
-    // Function to load wallets and usernames from DynamoDB
-function loadWalletsAndUsernames() {
-    var params = {
-        TableName: tableName
-    };
-    
-    dynamodb.scan(params, function(err, data) {
-        if (err) {
-            displayError("Error loading wallets and usernames from DynamoDB: " + err.message);
-        } else {
-            clearError();
-            console.log("Successfully loaded wallets and usernames from DynamoDB", data);
-            displayWalletsAndUsernames(data.Items);
-
-            // Highlight row containing @nftfanstoken
-            highlightRowContainingUsername(data.Items, "@nftfanstoken");
-        }
-    });
-}
-
-// Function to highlight the row containing a specific username
-function highlightRowContainingUsername(data, username) {
-    var walletTableBody = document.getElementById("walletTableBody");
-
-    for (var i = 0; i < data.length; i++) {
-        if (data[i].twitterUsername === username) {
-            // Get the row corresponding to the username and add a CSS class for highlighting
-            var row = walletTableBody.rows[i];
-            row.classList.add("highlighted-row");
-            break; // Stop searching after finding the first occurrence
-        }
-    }
-}
-
-// Function to display wallets and usernames sorted by tokens won
-function displayWalletsAndUsernames(walletsAndUsernames) {
-    var walletTableBody = document.getElementById("walletTableBody");
-    walletTableBody.innerHTML = ""; // Clear existing entries
-
-    // Sort the array of items by tokens won (descending order)
-    walletsAndUsernames.sort(function(a, b) {
-        return b.tokensWon - a.tokensWon;
+        // Post wallet with picture to DynamoDB
+        postWalletWithPicture(walletInput);
     });
 
-    // Add column titles
-    var headerRow = walletTableBody.insertRow(0);
-    headerRow.insertCell(0).textContent = "#";
-    headerRow.insertCell(1).textContent = "NFTFAN";
-    headerRow.insertCell(2).textContent = "X username";
-    headerRow.insertCell(3).textContent = "Wallet";
-    headerRow.insertCell(4).textContent = "Tokens Won";
+    function postWalletWithPicture(walletAddress) {
+        // Generate a unique identifier for the item
+        var nftfanId = 'nftfan_' + Date.now();
 
-    walletsAndUsernames.forEach(function (item, index) {
-        var row = walletTableBody.insertRow(index + 1); // Start from the second row (index + 1)
+        // URL of the picture to be associated with the wallet
+        var pictureUrl = 'https://i.seadn.io/s/raw/files/749021b85f1f70dd027a146fd7532039.png?auto=format&dpr=1&w=1000';
 
-        // Insert the index in the row
-        row.insertCell(0).textContent = walletsAndUsernames.length - index; // Adjust the index to start from 1
-        
-        // Insert the image with OpenSea link in the row
-        var nftCell = row.insertCell(1);
-        var image = document.createElement("img");
-        if (item.twitterUsername === '@nftfanstoken') {
-            image.src = "https://i.seadn.io/s/raw/files/4ee38fcd8ce97b2f52ab5257e036c359.png?auto=format&dpr=1&w=1000";
-        } else if (item.twitterUsername === '@cottons123') {
-            image.src = "https://i.seadn.io/s/raw/files/6f229cee3648016dcc20bfb7dde5aed7.png?auto=format&dpr=1&w=1000";
-        } else {
-            image.src = "https://i.seadn.io/s/raw/files/749021b85f1f70dd027a146fd7532039.png?auto=format&dpr=1&w=10&h=10";
-        }
-        image.width = 30;
-        image.height = 30;
-        var openSeaLink = document.createElement("a");
-        openSeaLink.href = "https://opensea.io/collection/nftfans-fans";
-        openSeaLink.target = "_blank";
-        openSeaLink.appendChild(image);
-        nftCell.appendChild(openSeaLink);
-        
-        var usernameCell = row.insertCell(2);
-        usernameCell.innerHTML = '<a href="https://twitter.com/' + item.twitterUsername.substring(1) + '" style="color: red;">' + item.twitterUsername + '</a>';
-        row.insertCell(3).textContent = item.walletAddress;
-        row.insertCell(4).textContent = item.tokensWon.toLocaleString();
+        // Put item into DynamoDB
+        var params = {
+            TableName: tableName,
+            Item: {
+                nftfan: nftfanId, // Include a unique identifier
+                walletAddress: walletAddress,
+                pictureUrl: pictureUrl // Include the URL of the picture
+            }
+        };
 
-        // Add click event listener to open Twitter profile
-        usernameCell.addEventListener('click', function() {
-            window.open('https://twitter.com/' + item.twitterUsername.substring(1), '_blank');
+        dynamodb.put(params, function(err, data) {
+            if (err) {
+                console.error("Error posting wallet with picture to DynamoDB:", err);
+            } else {
+                console.log("Successfully posted wallet with picture to DynamoDB:", data);
+                // After posting, display the wallet with the picture
+                displayWalletWithPicture(walletAddress, pictureUrl);
+            }
         });
-    });
+    }
+
+    function displayWalletWithPicture(walletAddress, pictureUrl) {
+        var walletCards = document.getElementById('walletCards');
+
+        // Create a card element
+        var card = document.createElement('div');
+        card.classList.add('card');
+
+        // Create an image element and set its source to the picture URL
+        var img = document.createElement('img');
+        img.src = pictureUrl;
+        img.alt = 'Avatar';
+
+        // Create a card content element
+        var cardContent = document.createElement('div');
+        cardContent.classList.add('card-content');
+
+        // Create a paragraph element for the wallet address
+        var addressParagraph = document.createElement('p');
+        addressParagraph.classList.add('card-address');
+        addressParagraph.textContent = walletAddress;
+
+        // Append elements to the card content
+        cardContent.appendChild(addressParagraph);
+
+        // Append image and content to the card
+        card.appendChild(img);
+        card.appendChild(cardContent);
+
+        // Append the card to the wallet cards container
+        walletCards.appendChild(card);
+    }
+
+    // Load wallet cards when the page loads
+    window.onload = function() {
+        loadWalletCards();
+    };
+
+    function loadWalletCards() {
+        var params = {
+            TableName: tableName
+        };
+
+        dynamodb.scan(params, function(err, data) {
+            if (err) {
+                console.error("Error loading wallet cards from DynamoDB:", err);
+            } else {
+                console.log("Successfully loaded wallet cards from DynamoDB:", data);
+                // Display the wallet cards
+                data.Items.forEach(function(item) {
+                    displayWalletWithPicture(item.walletAddress, item.pictureUrl);
+                });
+            }
+        });
+    }
+</script>
+<script>
+
+// Function to calculate the countdown
+function calculateCountdown() {
+  // Set the date of April 30, 2024
+  const targetDate = new Date("2024-04-30T00:00:00Z");
+  // Get the current date
+  const currentDate = new Date();
+  // Calculate the difference in milliseconds
+  const difference = targetDate - currentDate;
+  
+  // Calculate days, hours, minutes, and seconds
+  const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+  
+  // Display the countdown
+  document.getElementById("countdown").textContent = `${days} days ${hours} hours ${minutes} minutes ${seconds} seconds`;
 }
 
+// Call the function once to display the initial countdown
+calculateCountdown();
+
+// Update the countdown every second
+setInterval(calculateCountdown, 1000);
 
 
-
-
-    
-    // Function to display error messages
-    function displayError(message) {
-        var errorMessage = document.getElementById("errorMessage");
-        errorMessage.textContent = message;
-    }
-    
-    // Function to clear error messages
-    function clearError() {
-        var errorMessage = document.getElementById("errorMessage");
-        errorMessage.textContent = "";
-    }
-    
-    // Load wallets and usernames when the page loads
-    window.onload = function() {
-        loadWalletsAndUsernames();
-    };
 </script>
+
 </body>
 </html>
+
