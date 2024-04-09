@@ -23,16 +23,18 @@ body {
 /* Container styles */
 .container {
     width: 100%;
+    max-width: 100%;
     padding: 20px;
     background-color: #1e1e1e;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     overflow-x: auto;
+    overflow-y: hidden; /* Hide vertical scrollbar */
 }
 
 /* Input styles */
 input[type="text"] {
-    width: 100%;
+    width: calc(100% - 24px); /* Adjust for padding and border */
     padding: 12px;
     border: 1px solid #333;
     border-radius: 4px;
@@ -44,8 +46,7 @@ input[type="text"] {
 
 /* Button styles */
 button {
-    display: block;
-    width: 100%;
+    width: calc(100% - 24px); /* Adjust for padding */
     padding: 12px 0;
     background-color: #4CAF50;
     color: #fff;
@@ -96,7 +97,6 @@ th {
     font-size: 20px;
     color: #fff;
 }
-
 
     </style>
 
