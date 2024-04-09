@@ -5,118 +5,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NFT FANS TOKEN DATABASE</title>
     <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1002.0.min.js"></script>
- <style>
-/* Resetting default margin and padding for all elements */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* Body styles */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #121212;
-    color: #fff;
-}
-
-/* Container styles */
-.container {
+        <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #0d1117;
+            font-size: 6px; /* Set global font size to 6px */
+        }
+        .container {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            background-color: #0d1117;
+            
+           
+        }
+        input[type="text"] {
+            width: 90%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-size: 6px; /* Set font size for input fields */
+        }
+        button {
+            width: 25%;
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 6px; /* Set font size for buttons */
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .error {
+            color: red;
+            margin-bottom: 10px;
+            font-size: 6px; /* Set font size for error messages */
+        }
+     table {
     width: 100%;
-    max-width: 100%;
-    padding: 20px;
-    background-color: #1e1e1e;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    overflow-x: auto; /* Enable horizontal scrolling */
-    overflow-y: hidden; /* Hide vertical scrollbar */
-}
-
-/* Input styles */
-input[type="text"] {
-    width: calc(100% - 24px); /* Adjust for padding and border */
-    padding: 12px;
-    border: 1px solid #333;
-    border-radius: 4px;
-    margin-bottom: 10px;
-    font-size: 16px;
-    background-color: #333;
-    color: #fff;
-}
-
-/* Button styles */
-button {
-    width: calc(100% - 24px); /* Adjust for padding */
-    padding: 12px 0;
-    background-color: #4CAF50;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-}
-
-button:hover {
-    background-color: #45a049;
-}
-
-/* Error message styles */
-.error {
-    color: #ff5555;
-    margin-bottom: 10px;
-    font-size: 14px;
-}
-
-/* Table styles */
-table {
-    width: auto; /* Allow table to adjust width based on content */
-    max-width: 100%; /* Limit table to fit within the container */
     border-collapse: collapse;
-    font-size: 14px;
-    color: #fff;
+    margin-top: 20px;
+    font-size: 6px; /* Set font size for table */
+    color: #8b949e; /* Set font color for table */
 }
 
-th, td {
-    border: 1px solid #444;
-    padding: 8px;
-    text-align: left;
-    word-wrap: break-word; /* Wrap long words */
-    overflow: hidden; /* Hide overflow */
-    text-overflow: ellipsis; /* Show ellipsis for overflow */
+        th, td {
+            border: 1px solid #ddd;
+            padding: 4px;
+            text-align: left;
+            font-size: 6px; /* Set font size for table cells */
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+		.highlighted-row {
+    background-color: white; /* Change to any desired highlight color */
 }
-
-th:nth-child(-n+3),
-td:nth-child(-n+3) {
-    width: auto; /* Allow first three columns to adjust width based on content */
-}
-
-th {
-    background-color: #333;
-}
-
-/* Dark mode toggle button styles */
-.dark-mode-toggle {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    font-size: 20px;
-    color: #fff;
-}
-
-
 
     </style>
-
-
-
-
-
-
-
 </head>
 <body>
 
