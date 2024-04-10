@@ -168,39 +168,46 @@
         });
     }
 
-    function displayWalletWithPicture(walletAddress, imageUrl, yourUrl) {
-        var walletCards = document.getElementById('walletCards');
+function displayWalletWithPicture(walletAddress, imageUrl, yourUrl) {
+    var walletCards = document.getElementById('walletCards');
 
-        var card = document.createElement('div');
-        card.classList.add('card');
+    var card = document.createElement('div');
+    card.classList.add('card');
 
-        var img = document.createElement('img');
-        img.src = imageUrl;
-        img.alt = 'Avatar';
+    var img = document.createElement('img');
 
-        var cardContent = document.createElement('div');
-        cardContent.classList.add('card-content');
+    // Set up event listener for image load error
+    img.onerror = function() {
+        this.src = 'https://i.seadn.io/s/raw/files/749021b85f1f70dd027a146fd7532039.png?auto=format&dpr=1&w=1000'; // Replace with your preferred emoji URL
+    };
 
-        var addressParagraph = document.createElement('p');
-        addressParagraph.classList.add('card-address');
-        addressParagraph.textContent = walletAddress;
+    img.src = imageUrl;
+    img.alt = 'Avatar';
 
-        cardContent.appendChild(addressParagraph);
+    var cardContent = document.createElement('div');
+    cardContent.classList.add('card-content');
 
-        card.appendChild(img);
-        card.appendChild(cardContent);
+    var addressParagraph = document.createElement('p');
+    addressParagraph.classList.add('card-address');
+    addressParagraph.textContent = walletAddress;
 
-        // Store the URL as a data attribute on the card element
-        card.dataset.url = yourUrl;
+    cardContent.appendChild(addressParagraph);
 
-        // Add event listener to open the URL when clicked
-        card.addEventListener('click', function() {
-            var url = this.dataset.url;
-            window.open(url, '_blank');
-        });
+    card.appendChild(img);
+    card.appendChild(cardContent);
 
-        walletCards.appendChild(card);
-    }
+    // Store the URL as a data attribute on the card element
+    card.dataset.url = yourUrl;
+
+    // Add event listener to open the URL when clicked
+    card.addEventListener('click', function() {
+        var url = this.dataset.url;
+        window.open(url, '_blank');
+    });
+
+    walletCards.appendChild(card);
+}
+
 
     window.onload = function() {
         loadWalletCards();
