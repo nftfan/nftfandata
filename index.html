@@ -96,9 +96,10 @@
 
 <div class="search-bar">
     <form id="postForm">
-        <input type="text" id="walletInput" placeholder="Post your wallet address...">
-        <input type="text" id="imageUrlInput" placeholder="Image URL">
-        <button type="submit">Post</button>
+       <input type="text" id="walletInput" placeholder="Post your wallet address...">
+       <input type="text" id="imageUrlInput" placeholder="Image URL">
+       <input type="text" id="yourUrlInput" placeholder="Your URL">
+       <button type="submit">Post</button>
     </form>
 </div>
 <div class="reward-info">
@@ -125,11 +126,12 @@
         event.preventDefault();
         var walletInput = document.getElementById('walletInput').value.trim().toLowerCase();
         var imageUrl = document.getElementById('imageUrlInput').value.trim();
+        var yourUrl = document.getElementById('yourUrlInput').value.trim();
 
-        postWalletWithPicture(walletInput, imageUrl);
+        postWalletWithPicture(walletInput, imageUrl, yourUrl);
     });
 
-    function postWalletWithPicture(walletAddress, imageUrl) {
+    function postWalletWithPicture(walletAddress, imageUrl, yourUrl) {
         var nftfanId = 'nftfan_' + Date.now();
 
         var params = {
@@ -137,7 +139,8 @@
             Item: {
                 nftfan: nftfanId,
                 walletAddress: walletAddress,
-                pictureUrl: imageUrl
+                pictureUrl: imageUrl,
+                yourUrl: yourUrl
             }
         };
 
@@ -146,12 +149,12 @@
                 console.error("Error posting wallet with picture to DynamoDB:", err);
             } else {
                 console.log("Successfully posted wallet with picture to DynamoDB:", data);
-                displayWalletWithPicture(walletAddress, imageUrl);
+                displayWalletWithPicture(walletAddress, imageUrl, yourUrl);
             }
         });
     }
 
-    function displayWalletWithPicture(walletAddress, imageUrl) {
+    function displayWalletWithPicture(walletAddress, imageUrl, yourUrl) {
         var walletCards = document.getElementById('walletCards');
 
         var card = document.createElement('div');
@@ -173,6 +176,15 @@
         card.appendChild(img);
         card.appendChild(cardContent);
 
+        // Store the URL as a data attribute on the card element
+        card.dataset.url = yourUrl;
+
+        // Add event listener to open the URL when clicked
+        card.addEventListener('click', function() {
+            var url = this.dataset.url;
+            window.open(url, '_blank');
+        });
+
         walletCards.appendChild(card);
     }
 
@@ -192,7 +204,7 @@
             } else {
                 console.log("Successfully loaded wallet cards from DynamoDB:", data);
                 data.Items.forEach(function(item) {
-                    displayWalletWithPicture(item.walletAddress, item.pictureUrl);
+                    displayWalletWithPicture(item.walletAddress, item.pictureUrl, item.yourUrl);
                 });
             }
         });
@@ -217,5 +229,6 @@
 
 </body>
 </html>
+
 
 
