@@ -12,6 +12,17 @@
             padding: 20px;
             text-align: center;
         }
+		 @keyframes rainbow-border {
+        0% {
+            border-color: red;
+        }
+        50% {
+            border-color: yellow;
+        }
+        100% {
+            border-color: red;
+        }
+    }
         
         .search-bar {
             margin-bottom: 20px;
@@ -60,9 +71,10 @@
             overflow: hidden;
             margin: 10px;
             width: 200px;
+			border: 2px solid;
             display: inline-block;
             transition: transform 0.3s ease-in-out; /* Add transition effect */
-            border: 1px solid; /* Add border */
+            animation: rainbow-border 2s infinite; /* Adjusted animation duration to 2s */
         }
 
         .card:hover {
@@ -229,6 +241,3 @@
 
 </body>
 </html>
-
-
-
