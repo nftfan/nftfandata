@@ -14,6 +14,18 @@
             max-width: 800px; /* Reduce the maximum width of the page */
             margin: 0 auto; /* Center the page horizontally */
         }
+		@keyframes rainbow-border {
+        0% {
+            border-color: red;
+        }
+        50% {
+            border-color: yellow;
+        }
+        100% {
+            border-color: red;
+        }
+    }
+
 
         .post-form {
             margin-bottom: 20px;
@@ -25,7 +37,7 @@
             width: calc(100% - 20px); /* Adjust width as needed */
             padding: 10px;
             border: 1px solid;
-            border-radius: 5px;
+            border-radius: 15px;
             background-color: #333; /* Darker background color */
             color: #fff;
             font-size: 14px;
@@ -94,11 +106,13 @@
 
 .blog-image {
     max-width: 100%;
-    border-radius: 8px;
+    border-radius: 18px;
     margin-bottom: 10px;
     display: block;
     margin-left: auto;
     margin-right: auto;
+	border: 1px solid;
+	animation: rainbow-border 1s infinite; /* Adjusted animation duration to 2s */
 	
 }
 
