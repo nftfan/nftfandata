@@ -17,6 +17,7 @@
 
         .post-form {
             margin-bottom: 20px;
+			
         }
 
         .post-form input[type="text"],
@@ -144,6 +145,11 @@
                 font-size: 10px; /* Decrease font size for smaller screens */
             }
         }
+		.post-form {
+    display: none; /* Hide the post form by default */
+    margin-bottom: 20px;
+}
+
     </style>
 </head>
 <body>
@@ -152,8 +158,19 @@
         
     </div>
     <h1>NFTFANS TOKEN BLOG</h1> <!-- Display title at the top of the page -->
-    <div class="description">Share Information...</div>
+    <div class="description" id="shareInfo">Share Information...</div>
 </header>
+
+<div class="post-form" id="postForm">
+    <form>
+        <input type="text" id="imageUrlInput" placeholder="Image URL">
+        <input type="text" id="titleInput" placeholder="Title of the article...">
+        <textarea id="articleInput" placeholder="Enter article text..."></textarea>
+        <button type="submit">Post</button>
+    </form>
+</div>
+
+
 
 <div class="post-form">
     <form id="postForm">
@@ -287,6 +304,16 @@
         }
     });
 }
+
+document.getElementById('shareInfo').addEventListener('click', function() {
+    var postForm = document.getElementById('postForm');
+    if (postForm.style.display === 'none') {
+        postForm.style.display = 'block';
+    } else {
+        postForm.style.display = 'none';
+    }
+});
+
 
 
 </script>
