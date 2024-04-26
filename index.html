@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NFTFANS AIRDROPS</title>
+    <title>NFTFANS TOKEN</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -163,7 +163,7 @@
     <div class="header-image">
         
     </div>
-    <h1>AIRDROP FANS</h1> <!-- Display title at the top of the page -->
+    <h1>NFTS & TOKENS</h1> <!-- Display title at the top of the page -->
     <div class="description" id="shareInfo">Let's go...</div>
 </header>
 
@@ -233,37 +233,44 @@
     }
 
     function displayArticle(imageUrl, title, article, createdAt) {
-        var blogPosts = document.getElementById('blogPosts');
+    var blogPosts = document.getElementById('blogPosts');
 
-        var postDiv = document.createElement('div');
-        postDiv.classList.add('blog-post');
+    var postDiv = document.createElement('div');
+    postDiv.classList.add('blog-post');
 
-        // Display image if imageUrl is provided
-        if (imageUrl) {
-            var imageElement = document.createElement('img');
-            imageElement.classList.add('blog-image');
-            imageElement.src = imageUrl;
-            postDiv.appendChild(imageElement);
-        }
-
-        var titleElement = document.createElement('div');
-        titleElement.classList.add('blog-title');
-        titleElement.textContent = title;
-
-        var dateElement = document.createElement('div');
-        dateElement.classList.add('blog-date');
-        dateElement.textContent = formatDate(createdAt); // Format date and time
-
-        var contentElement = document.createElement('div');
-        contentElement.classList.add('blog-content');
-        contentElement.innerHTML = parseArticleContent(article);
-
-        postDiv.appendChild(titleElement);
-        postDiv.appendChild(dateElement);
-        postDiv.appendChild(contentElement);
-
-        blogPosts.appendChild(postDiv);
+    // Display image if imageUrl is provided
+    if (imageUrl) {
+        var imageElement = document.createElement('img');
+        imageElement.classList.add('blog-image');
+        imageElement.src = imageUrl;
+        postDiv.appendChild(imageElement);
     }
+
+    var titleElement = document.createElement('div');
+    titleElement.classList.add('blog-title');
+    titleElement.innerHTML = highlightWalletAddresses(title); // Highlight wallet addresses in title
+
+    var dateElement = document.createElement('div');
+    dateElement.classList.add('blog-date');
+    dateElement.textContent = formatDate(createdAt); // Format date and time
+
+    var contentElement = document.createElement('div');
+    contentElement.classList.add('blog-content');
+    contentElement.innerHTML = parseArticleContent(article);
+
+    postDiv.appendChild(titleElement);
+    postDiv.appendChild(dateElement);
+    postDiv.appendChild(contentElement);
+
+    blogPosts.appendChild(postDiv);
+}
+
+function highlightWalletAddresses(text) {
+    // Regular expression to find Ethereum wallet addresses
+    var walletRegex = /0x[a-fA-F0-9]{40}\b/g;
+    // Replace wallet addresses with the same address wrapped in a span with a yellow color
+    return text.replace(walletRegex, '<span style="color: yellow; font-size: 6px;">$&</span>');
+}
 
     function parseArticleContent(article) {
         // Regular expression to find URLs in the article text
