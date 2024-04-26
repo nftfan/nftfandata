@@ -66,12 +66,16 @@
             padding: 20px;
             margin-bottom: 20px;
             text-align: left;
+			border-radius: 5px;
+			border: 1px solid;
         }
 
         .blog-title {
             font-size: 24px;
             font-weight: bold;
             margin-bottom: 10px;
+			
+			
         }
 
         .blog-date {
@@ -84,6 +88,7 @@
             font-size: 16px;
             line-height: 1.5;
             margin-bottom: 20px;
+			
         }
 
         .blog-image {
@@ -264,23 +269,26 @@
     };
 
     function loadArticles() {
-        var params = {
-            TableName: tableName,
-            ProjectionExpression: 'imageUrl, title, article, createdAt',
-            ScanIndexForward: false // Sort in descending order by createdAt attribute
-        };
+    var params = {
+        TableName: tableName,
+        ProjectionExpression: 'imageUrl, title, article, createdAt',
+    };
 
-        dynamodb.scan(params, function(err, data) {
-            if (err) {
-                console.error("Error loading articles from DynamoDB:", err);
-            } else {
-                console.log("Successfully loaded articles from DynamoDB:", data);
-                data.Items.forEach(function(item) {
-                    displayArticle(item.imageUrl, item.title, item.article, item.createdAt);
-                });
-            }
-        });
-    }
+    dynamodb.scan(params, function(err, data) {
+        if (err) {
+            console.error("Error loading articles from DynamoDB:", err);
+        } else {
+            console.log("Successfully loaded articles from DynamoDB:", data);
+            // Sort the articles in descending order based on createdAt
+            var sortedArticles = data.Items.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            sortedArticles.forEach(function(item) {
+                displayArticle(item.imageUrl, item.title, item.article, item.createdAt);
+            });
+        }
+    });
+}
+
+
 </script>
 
 </body>
