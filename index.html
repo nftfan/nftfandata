@@ -11,120 +11,156 @@
             color: #fff; /* Text color */
             padding: 20px;
             text-align: center;
+            max-width: 800px; /* Reduce the maximum width of the page */
+            margin: 0 auto; /* Center the page horizontally */
         }
-		 @keyframes rainbow-border {
-        0% {
-            border-color: red;
-        }
-        50% {
-            border-color: yellow;
-        }
-        100% {
-            border-color: red;
-        }
-    }
-        
-        .search-bar {
+
+        .post-form {
             margin-bottom: 20px;
         }
 
-        .search-bar input[type="text"] {
-            width: 300px; /* Adjust width as needed */
+        .post-form input[type="text"],
+        .post-form textarea {
+            width: calc(100% - 20px); /* Adjust width as needed */
             padding: 10px;
             border: 1px solid;
-            border-radius: 20px;
+            border-radius: 5px;
             background-color: #333; /* Darker background color */
             color: #fff;
-            font-size: 12px;
+            font-size: 14px;
             outline: none;
+			margin-top: 10px;
+            margin-bottom: 10px;
             transition: background-color 0.3s ease;
         }
 
-        .search-bar input[type="text"]::placeholder {
+        .post-form input[type="text"]::placeholder,
+        .post-form textarea::placeholder {
             color: #999; /* Placeholder text color */
         }
 
-        .search-bar input[type="text"]:focus {
+        .post-form input[type="text"]:focus,
+        .post-form textarea:focus {
             background-color: #555; /* Darker background color on focus */
         }
 
-        .search-bar button {
+        .post-form button {
             padding: 10px 20px;
             border: none;
-            border-radius: 20px;
+            border-radius: 5px;
             background-color: #4CAF50; /* Green button color */
             color: #fff;
             font-size: 12px;
             cursor: pointer;
             transition: background-color 0.3s ease;
-            margin-top: 10px;
         }
 
-        .search-bar button:hover {
+        .post-form button:hover {
             background-color: #45a049; /* Darker green color on hover */
         }
 
-        .card {
-            background-color: #333; /* Darker card background color */
-		padding: 1px;
+        .blog-post {
+            background-color: #333;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            margin: 2px;
-		font-size: 9px;
-            width: 150px;
-			border: 1px solid;
-            display: inline-block;
-            transition: transform 0.3s ease-in-out; /* Add transition effect */
-            animation: rainbow-border 2s infinite; /* Adjusted animation duration to 2s */
-        }
-
-        .card:hover {
-            transform: scale(1.05); /* Increase size on hover */
-        }
-
-        .card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-        }
-
-        .card-content {
-            padding: 1px;
-        }
-
-        .card-address {
-            font-size: 5px;
-			margin-top: 1px;
-            margin-bottom: 0;
+            padding: 20px;
+            margin-bottom: 20px;
             text-align: left;
-            overflow-wrap: break-word;
-            word-wrap: break-word;
-            hyphens: auto;
-            line-height: 1.2;
+        }
+
+        .blog-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .blog-date {
+            color: #999;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .blog-content {
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .blog-image {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+		header {
+            text-align: center;
+            background-color: #660000;
+			 border-radius: 5px;
+            padding: 4px 5px;
+            font-size: 8px; /* Adjust the font size as needed */
+            position: fixed;
+            max-width: 800px;
+            top: 0;
+            z-index: 1000; /* Ensure the header stays above other content */
+            display: flex; /* Use flexbox layout */
+            flex-direction: row; /* Arrange items horizontally */
+            align-items: center; /* Center vertically */
+         
+        }
+
+       
+
+        header h1 {
+            margin: 0;
+        }
+
+        .description {
+            font-size: 10px;
+            color: #ccc;
+            margin-left: 5px;
+            text-align: center;
+        }
+        .description a {
+            color: #ccc;
+            text-decoration: none;
+        }
+        .description a:hover {
+            text-decoration: underline;
+        }
+
+        /* Media Query for smaller screens */
+        @media only screen and (max-width: 600px) {
+            .post-title {
+                font-size: 16px; /* Decrease font size for smaller screens */
+            }
+            .post-content {
+                font-size: 14px; /* Decrease font size for smaller screens */
+            }
+            .post-meta {
+                font-size: 10px; /* Decrease font size for smaller screens */
+            }
         }
     </style>
 </head>
 <body>
+<header>
+    <div class="header-image">
+        
+    </div>
+    <h1>NFTFANS TOKEN BLOG</h1> <!-- Display title at the top of the page -->
+    <div class="description">Share Information...</div>
+</header>
 
-<div class="search-bar">
+<div class="post-form">
     <form id="postForm">
-       <input type="text" id="walletInput" placeholder="Post your wallet address...">
-       <input type="text" id="imageUrlInput" placeholder="Image URL">
-       <input type="text" id="yourUrlInput" placeholder="Your URL">
-       <button type="submit">Post</button>
+        <input type="text" id="imageUrlInput" placeholder="Image URL">
+        <input type="text" id="titleInput" placeholder="Title of the article...">
+        <textarea id="articleInput" placeholder="Enter article text..."></textarea>
+        <button type="submit">Post</button>
     </form>
 </div>
-<div class="reward-info">
-    <p style="color: #999; font-size: 8px;">Next Reward in:</p>
-    <p id="countdown" style="color: #999; font-size: 8px;"></p>
-    <p style="color: #999; font-size: 8px;">Amount: 1KT $nftfan</p>
-</div>
 
-<div id="walletCards">
-    <!-- Wallet Cards will be displayed here -->
+<div id="blogPosts">
+    <!-- Posted articles will be displayed here -->
 </div>
 
 <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1002.0.min.js"></script>
@@ -139,114 +175,112 @@
 
     document.getElementById('postForm').addEventListener('submit', function(event) {
         event.preventDefault();
-        var walletInput = document.getElementById('walletInput').value.trim().toLowerCase();
         var imageUrl = document.getElementById('imageUrlInput').value.trim();
-        var yourUrl = document.getElementById('yourUrlInput').value.trim();
+        var titleInput = document.getElementById('titleInput').value.trim();
+        var articleInput = document.getElementById('articleInput').value.trim();
 
-        postWalletWithPicture(walletInput, imageUrl, yourUrl);
+        postArticle(imageUrl, titleInput, articleInput);
     });
 
-    function postWalletWithPicture(walletAddress, imageUrl, yourUrl) {
-        var nftfanId = 'nftfan_' + Date.now();
-
+    function postArticle(imageUrl, title, article) {
         var params = {
             TableName: tableName,
             Item: {
-                nftfan: nftfanId,
-                walletAddress: walletAddress,
-                pictureUrl: imageUrl,
-                yourUrl: yourUrl
+                nftfan: 'nftfan_' + Date.now(),
+                imageUrl: imageUrl,
+                title: title,
+                article: article,
+                createdAt: new Date().toISOString() // Store current date and time
             }
         };
 
         dynamodb.put(params, function(err, data) {
             if (err) {
-                console.error("Error posting wallet with picture to DynamoDB:", err);
+                console.error("Error posting article to DynamoDB:", err);
             } else {
-                console.log("Successfully posted wallet with picture to DynamoDB:", data);
-                displayWalletWithPicture(walletAddress, imageUrl, yourUrl);
+                console.log("Successfully posted article to DynamoDB:", data);
+                displayArticle(imageUrl, title, article, params.Item.createdAt); // Pass createdAt attribute
             }
         });
     }
 
-function displayWalletWithPicture(walletAddress, imageUrl, yourUrl) {
-    var walletCards = document.getElementById('walletCards');
+    function displayArticle(imageUrl, title, article, createdAt) {
+        var blogPosts = document.getElementById('blogPosts');
 
-    var card = document.createElement('div');
-    card.classList.add('card');
+        var postDiv = document.createElement('div');
+        postDiv.classList.add('blog-post');
 
-    var img = document.createElement('img');
+        // Display image if imageUrl is provided
+        if (imageUrl) {
+            var imageElement = document.createElement('img');
+            imageElement.classList.add('blog-image');
+            imageElement.src = imageUrl;
+            postDiv.appendChild(imageElement);
+        }
 
-    // Set up event listener for image load error
-    img.onerror = function() {
-        this.src = 'https://i.seadn.io/s/raw/files/749021b85f1f70dd027a146fd7532039.png?auto=format&dpr=1&w=1000'; // Replace with your preferred emoji URL
-    };
+        var titleElement = document.createElement('div');
+        titleElement.classList.add('blog-title');
+        titleElement.textContent = title;
 
-    img.src = imageUrl;
-    img.alt = 'Avatar';
+        var dateElement = document.createElement('div');
+        dateElement.classList.add('blog-date');
+        dateElement.textContent = formatDate(createdAt); // Format date and time
 
-    var cardContent = document.createElement('div');
-    cardContent.classList.add('card-content');
+        var contentElement = document.createElement('div');
+        contentElement.classList.add('blog-content');
+        contentElement.innerHTML = parseArticleContent(article);
 
-    var addressParagraph = document.createElement('p');
-    addressParagraph.classList.add('card-address');
-    addressParagraph.textContent = walletAddress;
+        postDiv.appendChild(titleElement);
+        postDiv.appendChild(dateElement);
+        postDiv.appendChild(contentElement);
 
-    cardContent.appendChild(addressParagraph);
+        blogPosts.appendChild(postDiv);
+    }
 
-    card.appendChild(img);
-    card.appendChild(cardContent);
+    function parseArticleContent(article) {
+        // Regular expression to find URLs in the article text
+        var urlRegex = /(https?:\/\/[^\s]+)/g;
 
-    // Store the URL as a data attribute on the card element
-    card.dataset.url = yourUrl;
+        // Replace URLs with <img> tags if they end with an image extension
+        var parsedArticle = article.replace(urlRegex, function(url) {
+            // Check if the URL ends with an image extension
+            if (url.match(/\.(jpeg|jpg|gif|png)$/) != null) {
+                return '<img src="' + url + '" class="blog-image">';
+            } else {
+                return url;
+            }
+        });
 
-    // Add event listener to open the URL when clicked
-    card.addEventListener('click', function() {
-        var url = this.dataset.url;
-        window.open(url, '_blank');
-    });
+        return parsedArticle;
+    }
 
-    walletCards.appendChild(card);
-}
-
+    function formatDate(dateString) {
+        var date = new Date(dateString);
+        return date.toLocaleString(); // Format the date and time
+    }
 
     window.onload = function() {
-        loadWalletCards();
-        calculateCountdown();
+        loadArticles();
     };
 
-    function loadWalletCards() {
+    function loadArticles() {
         var params = {
-            TableName: tableName
+            TableName: tableName,
+            ProjectionExpression: 'imageUrl, title, article, createdAt',
+            ScanIndexForward: false // Sort in descending order by createdAt attribute
         };
 
         dynamodb.scan(params, function(err, data) {
             if (err) {
-                console.error("Error loading wallet cards from DynamoDB:", err);
+                console.error("Error loading articles from DynamoDB:", err);
             } else {
-                console.log("Successfully loaded wallet cards from DynamoDB:", data);
+                console.log("Successfully loaded articles from DynamoDB:", data);
                 data.Items.forEach(function(item) {
-                    displayWalletWithPicture(item.walletAddress, item.pictureUrl, item.yourUrl);
+                    displayArticle(item.imageUrl, item.title, item.article, item.createdAt);
                 });
             }
         });
     }
-
-    function calculateCountdown() {
-        const targetDate = new Date("2024-04-30T00:00:00Z");
-        const currentDate = new Date();
-        const difference = targetDate - currentDate;
-  
-        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-  
-        document.getElementById("countdown").textContent = `${days} days ${hours} hours ${minutes} minutes ${seconds} seconds`;
-    }
-
-    setInterval(calculateCountdown, 1000);
-
 </script>
 
 </body>
