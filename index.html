@@ -7,61 +7,80 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #000000; /* Dark background color */
-            color: #fff; /* Text color */
+            background-color: #000000;
+            color: #fff;
             padding: 20px;
             text-align: center;
-            max-width: 800px; /* Reduce the maximum width of the page */
-            margin: 0 auto; /* Center the page horizontally */
+            max-width: 800px;
+            margin: 0 auto;
         }
-		@keyframes rainbow-border {
-        0% {
-            border-color: red;
-        }
-        50% {
-            border-color: yellow;
-        }
-        100% {
-            border-color: red;
-        }
-    }
 
+        header {
+            text-align: center;
+            background-color: #660000;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            padding: 4px 5px;
+            font-size: 8px;
+            position: fixed;
+            max-width: 800px;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .description {
+            font-size: 10px;
+            color: #ccc;
+            margin-left: 5px;
+            text-align: center;
+        }
+
+        .description a {
+            color: #ccc;
+            text-decoration: none;
+        }
+
+        .description a:hover {
+            text-decoration: underline;
+        }
 
         .post-form {
-            margin-bottom: 20px;
-			
+            margin-bottom: 5px;
         }
 
-        .post-form input[type="text"],
-        .post-form textarea {
-            width: calc(100% - 20px); /* Adjust width as needed */
+        .post-form input[type="text"] {
+            width: calc(100% - 20px);
             padding: 10px;
-            border: 1px solid;
             border-radius: 15px;
-            background-color: #333; /* Darker background color */
+            background-color: #333;
             color: #fff;
             font-size: 14px;
             outline: none;
-			margin-top: 10px;
+            margin-top: 10px;
             margin-bottom: 10px;
             transition: background-color 0.3s ease;
         }
 
-        .post-form input[type="text"]::placeholder,
-        .post-form textarea::placeholder {
-            color: #999; /* Placeholder text color */
+        .post-form input[type="text"]::placeholder {
+            color: #999;
         }
 
-        .post-form input[type="text"]:focus,
-        .post-form textarea:focus {
-            background-color: #555; /* Darker background color on focus */
+        .post-form input[type="text"]:focus {
+            background-color: #555;
         }
 
         .post-form button {
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
-            background-color: #4CAF50; /* Green button color */
+            background-color: #4CAF50;
             color: #fff;
             font-size: 12px;
             cursor: pointer;
@@ -69,26 +88,38 @@
         }
 
         .post-form button:hover {
-            background-color: #45a049; /* Darker green color on hover */
+            background-color: #45a049;
+        }
+
+        #blogPosts {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 0fr));
+            gap: 0px;
+            justify-content: center;
         }
 
         .blog-post {
             background-color: #000000;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 2px;
             padding: 20px;
             margin-bottom: 20px;
-            text-align: left;
-			border-radius: 5px;
-			border: 1px solid #383838;
+            text-align: center;
+        }
+
+        .blog-image {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            animation: rainbow-border 1s infinite;
         }
 
         .blog-title {
             font-size: 18px;
             font-weight: bold;
             margin-bottom: 10px;
-			
-			
         }
 
         .blog-date {
@@ -101,108 +132,139 @@
             font-size: 12px;
             line-height: 1.5;
             margin-bottom: 20px;
-			
         }
 
-.blog-image {
-    max-width: 100%;
-    border-radius: 18px;
-    margin-bottom: 10px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-	border: 1px solid;
-	animation: rainbow-border 1s infinite; /* Adjusted animation duration to 2s */
-	
-}
+        .mint-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #FF5722;
+            color: #fff;
+            font-size: 12px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
 
-		header {
-            text-align: center;
-            background-color: #660000;
-			 border-radius: 5px;
-			  margin-bottom: 10px;
-            padding: 4px 5px;
-            font-size: 8px; /* Adjust the font size as needed */
+        .mint-button:hover {
+            background-color: #e64a19;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
             position: fixed;
-            max-width: 800px;
+            z-index: 1001;
+            left: 0;
             top: 0;
-            z-index: 1000; /* Ensure the header stays above other content */
-            display: flex; /* Use flexbox layout */
-            flex-direction: row; /* Arrange items horizontally */
-            align-items: center; /* Center vertically */
-         
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
         }
 
-       
+        .modal-content {
+            background-color: #333;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 5px;
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+        }
 
-        header h1 {
+        .modal-content h2 {
             margin: 0;
+            font-size: 18px;
+            color: #fff;
         }
 
-        .description {
+        .modal-content p {
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        .close {
+            color: #fff;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #f1c40f;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .nft-code {
             font-size: 10px;
             color: #ccc;
-            margin-left: 5px;
-            text-align: center;
-        }
-        .description a {
-            color: #ccc;
-            text-decoration: none;
-        }
-        .description a:hover {
-            text-decoration: underline;
+            margin-top: 5px;
         }
 
         /* Media Query for smaller screens */
         @media only screen and (max-width: 600px) {
-            .post-title {
-                font-size: 16px; /* Decrease font size for smaller screens */
+            .post-form input[type="text"] {
+                font-size: 12px;
             }
-            .post-content {
-                font-size: 10px; /* Decrease font size for smaller screens */
+
+            .post-form button {
+                font-size: 10px;
             }
-            .post-meta {
-                font-size: 10px; /* Decrease font size for smaller screens */
+
+            #blogPosts {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+
+            .blog-title {
+                font-size: 16px;
+            }
+
+            .blog-content {
+                font-size: 10px;
+            }
+
+            .blog-date {
+                font-size: 10px;
             }
         }
-		.post-form {
-    display: none; /* Hide the post form by default */
-    margin-bottom: 20px;
-}
-
     </style>
 </head>
 <body>
+
 <header>
-    <div class="header-image">
-        
+    <h1>NFT Marketplace</h1>
+    <div class="description">
+        <a href="#">Powered by NFT FANS TOKEN</a>
     </div>
-    <h1></h1> <!-- Display title at the top of the page -->
-    <div class="description" id="shareInfo">Let's go...</div>
 </header>
 
 <div class="post-form" id="postForm">
     <form>
         <input type="text" id="imageUrlInput" placeholder="Image URL">
-        <input type="text" id="titleInput" placeholder="Title of the article...">
-        <textarea id="articleInput" placeholder="Enter article text..."></textarea>
-        <button type="submit">Post</button>
-    </form>
-</div>
-
-
-
-<div class="post-form">
-    <form id="postForm">
-        <input type="text" id="imageUrlInput" placeholder="Image URL">
-        <input type="text" id="titleInput" placeholder="Title of the article...">
-        <textarea id="articleInput" placeholder="Enter article text..."></textarea>
         <button type="submit">Post</button>
     </form>
 </div>
 
 <div id="blogPosts">
     <!-- Posted articles will be displayed here -->
+</div>
+<div id="loadingIndicator" style="display: none; color: #ccc;">Loading more posts...</div>
+
+<!-- Modal for Minting -->
+<div id="mintModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Welcome to NFT FANS TOKEN Private Order</h2>
+    <p>Pay mint price of 1 $matic to our official wallet: <span style="font-size: 8px; color: yellow;">0x92d550cdbc234211957bd1b579d962c885a127ba</span></p>
+    <p>Add the NFT Code after 1 $matic. </p> 
+    <p>For Example: if your NFT Code is 7772324 Pay exactly 1.7772324 matic</p>
+    <p>With each order you will receive 1000 Trillion $nftfan tokens.</p>
+    </div>
 </div>
 
 <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1002.0.min.js"></script>
@@ -214,25 +276,28 @@
 
     var dynamodb = new AWS.DynamoDB.DocumentClient();
     var tableName = 'nftfan';
+    var lastEvaluatedKey = null;
+    var isLoading = false;
 
     document.getElementById('postForm').addEventListener('submit', function(event) {
         event.preventDefault();
         var imageUrl = document.getElementById('imageUrlInput').value.trim();
-        var titleInput = document.getElementById('titleInput').value.trim();
-        var articleInput = document.getElementById('articleInput').value.trim();
-
-        postArticle(imageUrl, titleInput, articleInput);
+        postArticle(imageUrl);
     });
 
-    function postArticle(imageUrl, title, article) {
+    function generateRandomCode() {
+        return Math.floor(1000000 + Math.random() * 9000000);
+    }
+
+    function postArticle(imageUrl) {
+        var nftCode = generateRandomCode(); // Generate the NFT code
         var params = {
             TableName: tableName,
             Item: {
                 nftfan: 'nftfan_' + Date.now(),
                 imageUrl: imageUrl,
-                title: title,
-                article: article,
-                createdAt: new Date().toISOString() // Store current date and time
+                createdAt: new Date().toISOString(),
+                nftCode: nftCode // Save the generated NFT code
             }
         };
 
@@ -241,109 +306,120 @@
                 console.error("Error posting article to DynamoDB:", err);
             } else {
                 console.log("Successfully posted article to DynamoDB:", data);
-                displayArticle(imageUrl, title, article, params.Item.createdAt); // Pass createdAt attribute
+                displayArticle(imageUrl, params.Item.createdAt, nftCode);
             }
         });
     }
 
-    function displayArticle(imageUrl, title, article, createdAt) {
-    var blogPosts = document.getElementById('blogPosts');
+    function displayArticle(imageUrl, createdAt, nftCode) {
+        var blogPosts = document.getElementById('blogPosts');
 
-    var postDiv = document.createElement('div');
-    postDiv.classList.add('blog-post');
+        var postDiv = document.createElement('div');
+        postDiv.classList.add('blog-post');
 
-    // Display image if imageUrl is provided
-    if (imageUrl) {
-        var imageElement = document.createElement('img');
-        imageElement.classList.add('blog-image');
-        imageElement.src = imageUrl;
-        postDiv.appendChild(imageElement);
-    }
+        if (imageUrl) {
+            var imageElement = document.createElement('img');
+            imageElement.classList.add('blog-image');
+            imageElement.src = imageUrl;
+            postDiv.appendChild(imageElement);
 
-    var titleElement = document.createElement('div');
-    titleElement.classList.add('blog-title');
-    titleElement.innerHTML = highlightWalletAddresses(title); // Highlight wallet addresses in title
+            // Create and add the Mint button
+            var mintButton = document.createElement('button');
+            mintButton.classList.add('mint-button');
+            mintButton.textContent = 'Mint';
+            mintButton.onclick = function() {
+                openMintModal();
+            };
+            postDiv.appendChild(mintButton);
+        }
 
-    var dateElement = document.createElement('div');
-    dateElement.classList.add('blog-date');
-    dateElement.textContent = formatDate(createdAt); // Format date and time
+        var dateElement = document.createElement('div');
+        dateElement.classList.add('blog-date');
+        dateElement.textContent = formatDate(createdAt);
 
-    var contentElement = document.createElement('div');
-    contentElement.classList.add('blog-content');
-    contentElement.innerHTML = parseArticleContent(article);
+        var codeElement = document.createElement('div');
+        codeElement.classList.add('nft-code');
+        codeElement.textContent = 'NFT Code: ' + nftCode;
 
-    postDiv.appendChild(titleElement);
-    postDiv.appendChild(dateElement);
-    postDiv.appendChild(contentElement);
+        postDiv.appendChild(dateElement);
+        postDiv.appendChild(codeElement);
 
-    blogPosts.appendChild(postDiv);
-}
-
-function highlightWalletAddresses(text) {
-    // Regular expression to find Ethereum wallet addresses
-    var walletRegex = /0x[a-fA-F0-9]{40}\b/g;
-    // Replace wallet addresses with the same address wrapped in a span with a yellow color
-    return text.replace(walletRegex, '<span style="color: yellow; font-size: 6px;">$&</span>');
-}
-
-    function parseArticleContent(article) {
-        // Regular expression to find URLs in the article text
-        var urlRegex = /(https?:\/\/[^\s]+)/g;
-
-        // Replace URLs with <img> tags if they end with an image extension
-        var parsedArticle = article.replace(urlRegex, function(url) {
-            // Check if the URL ends with an image extension
-            if (url.match(/\.(jpeg|jpg|gif|png)$/) != null) {
-                return '<img src="' + url + '" class="blog-image">';
-            } else {
-                return url;
-            }
-        });
-
-        return parsedArticle;
+        blogPosts.appendChild(postDiv);
     }
 
     function formatDate(dateString) {
         var date = new Date(dateString);
-        return date.toLocaleString(); // Format the date and time
+        return date.toLocaleString();
+    }
+
+    function loadArticles() {
+        if (isLoading) return;
+        
+        isLoading = true;
+        document.getElementById('loadingIndicator').style.display = 'block';
+
+        var params = {
+            TableName: tableName,
+            ProjectionExpression: 'imageUrl, createdAt, nftCode',
+            ExclusiveStartKey: lastEvaluatedKey
+        };
+
+        dynamodb.scan(params, function(err, data) {
+            if (err) {
+                console.error("Error loading articles from DynamoDB:", err);
+                isLoading = false;
+            } else {
+                console.log("Successfully loaded articles from DynamoDB:", data);
+                var sortedArticles = data.Items.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                sortedArticles.forEach(function(item) {
+                    displayArticle(item.imageUrl, item.createdAt, item.nftCode);
+                });
+
+                lastEvaluatedKey = data.LastEvaluatedKey;
+
+                document.getElementById('loadingIndicator').style.display = 'none';
+                isLoading = false;
+            }
+        });
+    }
+
+    function setupInfiniteScroll() {
+        var loadingIndicator = document.getElementById('loadingIndicator');
+
+        var observer = new IntersectionObserver(function(entries) {
+            if (entries[0].isIntersecting) {
+                if (isLoading) return;
+                loadArticles();
+            }
+        }, { threshold: 1.0 });
+
+        observer.observe(loadingIndicator);
     }
 
     window.onload = function() {
         loadArticles();
+        setupInfiniteScroll();
     };
 
-    function loadArticles() {
-    var params = {
-        TableName: tableName,
-        ProjectionExpression: 'imageUrl, title, article, createdAt',
-    };
+    // Modal functionality
+    var modal = document.getElementById('mintModal');
+    var span = document.getElementsByClassName('close')[0];
 
-    dynamodb.scan(params, function(err, data) {
-        if (err) {
-            console.error("Error loading articles from DynamoDB:", err);
-        } else {
-            console.log("Successfully loaded articles from DynamoDB:", data);
-            // Sort the articles in descending order based on createdAt
-            var sortedArticles = data.Items.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-            sortedArticles.forEach(function(item) {
-                displayArticle(item.imageUrl, item.title, item.article, item.createdAt);
-            });
-        }
-    });
-}
-
-document.getElementById('shareInfo').addEventListener('click', function() {
-    var postForm = document.getElementById('postForm');
-    if (postForm.style.display === 'none') {
-        postForm.style.display = 'block';
-    } else {
-        postForm.style.display = 'none';
+    function openMintModal() {
+        modal.style.display = 'flex';
     }
-});
 
+    span.onclick = function() {
+        modal.style.display = 'none';
+    }
 
-
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
 </script>
 
 </body>
 </html>
+
