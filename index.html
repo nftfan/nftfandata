@@ -232,6 +232,23 @@
                 font-size: 10px;
             }
         }
+
+        /* Notification styles */
+        .notification {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            z-index: 1001;
+        }
+
+        .notification.show {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -246,6 +263,7 @@
 <div class="post-form" id="postForm">
     <form>
         <input type="text" id="imageUrlInput" placeholder="Image URL">
+        <input type="text" id="fanIdInput" placeholder="Enter your Fan ID">
         <button type="submit">Post</button>
     </form>
 </div>
@@ -260,12 +278,15 @@
     <div class="modal-content">
         <span class="close">&times;</span>
         <h2>Welcome to NFT FANS TOKEN Private Order</h2>
-    <p>Pay mint price of 1 $matic to our official wallet: <span style="font-size: 8px; color: yellow;">0x92d550cdbc234211957bd1b579d962c885a127ba</span></p>
-    <p>Add the NFT Code after 1 $matic. </p> 
-    <p>For Example: if your NFT Code is 7772324 Pay exactly 1.7772324 matic</p>
-    <p>With each order you will receive 1000 Trillion $nftfan tokens.</p>
+        <p>Pay mint price of 1 $matic to our official wallet: <span style="font-size: 8px; color: yellow;">0x92d550cdbc234211957bd1b579d962c885a127ba</span></p>
+        <p>Add the NFT Code after 1 $matic. </p> 
+        <p>For Example: if your NFT Code is 7772324 Pay exactly 1.7772324 matic</p>
+        <p>With each order you will receive 1000 Trillion $nftfan tokens.</p>
     </div>
 </div>
+
+<!-- Notification -->
+<div id="notification" class="notification"></div>
 
 <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1002.0.min.js"></script>
 <script>
@@ -282,14 +303,15 @@
     document.getElementById('postForm').addEventListener('submit', function(event) {
         event.preventDefault();
         var imageUrl = document.getElementById('imageUrlInput').value.trim();
-        postArticle(imageUrl);
+        var fanId = document.getElementById('fanIdInput').value.trim(); // Get the Fan ID
+        postArticle(imageUrl, fanId);
     });
 
     function generateRandomCode() {
         return Math.floor(1000000 + Math.random() * 9000000);
     }
 
-    function postArticle(imageUrl) {
+    function postArticle(imageUrl, fanId) {
         var nftCode = generateRandomCode(); // Generate the NFT code
         var params = {
             TableName: tableName,
@@ -297,7 +319,8 @@
                 nftfan: 'nftfan_' + Date.now(),
                 imageUrl: imageUrl,
                 createdAt: new Date().toISOString(),
-                nftCode: nftCode // Save the generated NFT code
+                nftCode: nftCode, // Save the generated NFT code
+                fanId: fanId // Save the Fan ID
             }
         };
 
@@ -307,6 +330,7 @@
             } else {
                 console.log("Successfully posted article to DynamoDB:", data);
                 displayArticle(imageUrl, params.Item.createdAt, nftCode);
+                showNotification('NFT posted successfully!');
             }
         });
     }
@@ -418,8 +442,19 @@
             modal.style.display = 'none';
         }
     }
+
+    // Notification functionality
+    function showNotification(message) {
+        var notification = document.getElementById('notification');
+        notification.textContent = message;
+        notification.classList.add('show');
+        setTimeout(function() {
+            notification.classList.remove('show');
+        }, 3000); // Hide after 3 seconds
+    }
 </script>
 
 </body>
 </html>
+
 
